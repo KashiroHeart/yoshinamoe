@@ -1,0 +1,109 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <!----- 本質情報　起 ------>
+    <meta charset="UTF-8">
+    <meta name="author" content="余科">
+    <meta name="description" content="ツールとかを置きたい場所">
+    <meta name="keywords" content="共に高みを目指そうぞ、未熟者よ。">
+    <meta property="og:title" content="点字">
+    <meta property="og:description" content="点字">
+    <meta property="og:url" content="https://4472.web.fc2.com/">
+    <!-- <meta property="og:image" content=""> -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="囹圄">
+    <title>点字 - 囹圄</title>
+    <!----- 本質情報　結 ------>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow">
+    <title>点字</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="./src/main.js" type="module"></script>
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+        overflow-x: hidden;
+      }
+      textarea {
+        width: 80vw;
+        height: 6em;
+        font-family: "Consolas";
+      }
+      .area {
+        display: none;
+      }
+      .header {
+        position: sticky;
+        left: 0;
+        top: 0;
+        width: 100vw;
+        height: auto;
+        background-color: white;
+        border-bottom: 3px groove #ddd;
+        z-index: 1;
+      }
+      .header, .resultbox {
+        padding: 0 20px;
+      }
+      .toolbox {
+        padding: 20px;
+      }
+      .toolbox select, .toolbox button {
+        display: inline-block;
+        margin: 0 5px 5px 0;
+        padding: 4px;
+        font-size: 16px;
+        border-radius: 0.35em;
+      }
+      .toolbox button:active {
+        filter: brightness(0.8);
+      }
+      .result {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div>
+        <p style="padding:20px 0 0 0;"><a href="/">TOP</a></p>
+        <h1>点字変換</h1>
+      </div>
+      <div class="toolbox">
+        <select id="tenji">
+          <optgroup label="6点点字モード">
+            <option value="k2t">かな→点字</option>
+            <option value="t2k">点字→かな</option>
+          </optgroup>
+          <optgroup label="8点点字モード">
+          	<option value="k2kt">漢字かな→漢点字</option>
+          	<option value="kt2k">漢点字→漢字</option>
+          	<option value="k2kt2">漢字→漢点字（始終点符号なし）</option>
+          	<option value="forcefix">始終点総当たり補完</option>
+          </optgroup>
+        </select>
+        <button id="tenji_run">実行</button>
+      </div>
+      <textarea id="input" name="input"></textarea>
+      <br><label>↓</label>
+    </div>
+    <div class="resultbox">
+      <div class="result">
+        <textarea id="output" name="output"></textarea>
+      </div>
+      <div class="result">
+        <p>総当たりモードは冗談みたいに重いので自動実行されません。</p>
+        <table>
+          <thead id="table_header"><tr><th>配列</th><th>変換結果</th></tr></thead>
+          <tbody id="table_body"></tbody>
+        </table>
+      </div>
+      <div class="result" style="display:block;">
+        <h2>説明</h2>
+        <p>未完成です。<br>10文字以上の総当りはクラッシュの恐れがあります。</p>
+        <p>勝手に変換してくれるようにしました。</p>
+      </div>
+    </div>
+  </body>
+</html>

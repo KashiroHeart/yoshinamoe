@@ -1,0 +1,232 @@
+/* 共通 */
+* {
+  padding: 0;
+  margin: 0;
+  inset: 0;
+  box-sizing: border-box;
+  font-family: Meiryo, "Noto Sans JP";
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.center {
+  text-align: center;
+  margin: auto;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.pc-only {
+  display: none;
+}
+
+.mobile-only {
+  display: block;
+}
+
+@media (min-width: 720px) {
+  .pc-only {
+    display: block;
+  }
+  .mobile-only {
+    display: none;
+  }
+}
+
+.hidden {
+  display: none;
+}
+
+header {
+  display: block;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: auto;
+  white-space: normal;
+}
+
+body {
+  background-color: #eee;
+}
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
+  align-content: center;
+  align-items: flex-start;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+.sidemenu {
+  display: block;
+  position: relative;
+  background-color: #111;
+  width: 18em;
+  flex-basis: auto;
+  flex-grow: 1;
+  margin-left: -18em;
+  min-width: 18em;
+}
+
+.sidemenu-trigger {
+  color: white;
+}
+
+.sidemenu-trigger > svg {
+  color: white;
+  fill: white;
+  width: 60px;
+}
+
+.sidemenu nav {
+  margin-bottom: 300px;
+}
+
+.sidemenu-thumbnail {
+  width: auto;
+  height: 120px;
+}
+
+.article {
+  display: block;
+  background-color: #eee;
+  width: 0;					/* 幅0にしないとサイドメニューが中途半端にしか出てこない */
+  flex-basis: 100%;
+  flex-grow: 1;
+  white-space: nowrap;
+}
+
+.article-header {
+  height: auto;
+  padding: 2em 1.5em;
+  background-color: #111;
+  color: #eee;
+}
+
+.article-header h1 {
+  border-bottom: 2px groove lightgray;
+}
+
+.article-content {
+  padding: 2em 0.5em 0.5em 0.5em;
+  min-height: 30em;
+}
+
+@media (min-width: 720px) {
+  .container {
+  	flex-direction: row;
+  }
+}
+
+li.sidemenu-list-content {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+li.sidemenu-list-content.head {
+  padding: 2em 0 0 0;
+  text-align: center;
+  font-weight: bold;
+  color: #eee;
+}
+
+li.sidemenu-list-content.option {
+  border-top: 1px solid gray;
+  border-bottom: 1px solid gray;
+  background-color: white;
+}
+
+a.sidemenu-list-url.tool {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-left: 0.5em;
+  text-decoration: none;
+  color: blue;
+  padding: 0.8em 0.5em;
+}
+
+li.sidemenu-list-content.option:hover {
+  background-color: #eee;
+}
+
+a.sidemenu-list-url.tool:hover {
+  color: orangered;
+}
+
+a.sidemenu-list-url.tool:active {
+  color: purple;
+}
+
+/* ツール用 */
+fieldset.noborder {
+  border: none;
+}
+
+select {
+  font-size: 24px;
+  border-radius: 4px;
+}
+
+input, textarea {
+  font-size: 16px;
+  border-radius: 4px;
+  padding: 5px 2.5px 5px 2.5px;
+}
+
+.tool-window {
+  padding: 5px;
+}
+
+.full-label {
+  vertical-align: top;
+}
+
+.full-label > label {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+textarea.input-area {
+  width: 300px;
+  height: 150px;
+}
+
+th {
+  white-space: normal;
+}
+
+input[readonly], textarea[readonly] {
+  background-color: #bbb;
+}
+
+/* ポリュビオス暗号ツール */
+#tool_input > input[type=number] {
+  font-family: "Consolas", monospace;
+}
+
+#preview th, #preview td{
+  width: 2em;
+  height: 2em;
+  text-align: center;
+  vertical-align: middle;
+}

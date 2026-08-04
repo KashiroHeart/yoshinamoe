@@ -1,0 +1,190 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <!----- 本質情報　起 ------>
+    <meta charset="UTF-8">
+    <meta name="author" content="余科">
+    <meta name="description" content="ツールとかを置きたい場所">
+    <meta name="keywords" content="<3">
+    <meta property="og:title" content="dcphr">
+    <meta property="og:description" content="dcphr">
+    <meta property="og:url" content="https://4472.web.fc2.com/cipher/de/">
+    <!-- <meta property="og:image" content=""> -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="囹圄">
+    <title>dcphr - 囹圄</title>
+    <!----- 本質情報　結 ------>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow">
+    <title>dcphr</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="./src/main.js" type="module"></script>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      
+      /* 配置用CSS */
+      .headtext {
+        padding: 10px;
+      }
+      .column-flex {
+        display: flex;
+        flex-direction: column;
+      }
+      .row-flex {
+        display: flex;
+        flex-direction: row;
+      }
+      .flex-top {
+        width: 100%;
+        min-height: 5em;
+        flex: 0 0 100%;
+      }
+      .flex-sideheader {
+        width: auto;
+      }
+      .flex-sidebar {
+        width: auto;
+        min-height: 5em;
+        flex: 0 0 20em;
+      }
+      .flex-body {
+        width: auto;
+        min-height: 5em;
+      }
+      .padding {
+        padding: 10px;
+      }
+      
+      .main {
+        margin: auto;
+        justify-content: center;
+        width: 90vw;
+      }
+      .input-box {
+        display: block;
+        height: 8em;
+        max-height: 150px;
+        border: none;
+        width: 100%;
+        resize: vertical;
+      }
+      .textarea-box {
+        margin: 10px auto;
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+        border: 1px solid #333;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+      .textarea-box .textarea-box-head {
+        display: block;
+        width: 1.5em;
+      }
+      .textarea-box .textarea-box-body {
+        width: 100%;
+        display: block;
+      }
+      .queue-toolbox {
+        margin: 7px 0;
+      }
+      
+      /* 装飾用CSS */
+      body {
+        background-color: #222;
+        color: #222;
+      }
+      .headtext {
+        font-family: "Consolas", monospace;
+        color: #eee;
+      }
+      .toolbox {
+        background-color: #eee;
+      }
+      .queue-box {
+        border: 8px solid #552424;
+        background-color: #ccc6c6;
+      }
+      .queue {
+        border: 8px solid #1a1a55;
+        background-color: #c6c6cc;
+      }
+      .queue .queue-head {
+        background-color: #999;
+      }
+      .queue .queue-body {
+        background-color: #cacaca;
+      }
+      
+      .input-box {
+        font-size: 16px;
+      }
+      .textarea-box .textarea-box-head {
+        background-color: #222;
+        color: #eee;
+        writing-mode: vertical-rl;
+        text-align: center;
+      }
+      .option-font {
+        padding: 3 5px;
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h2 class="headtext">&gt; <a href="/" style="background-color: white;">cd /</a> | &gt; dcphr 21 4 132i</h2>
+    <div class="wrapper column-flex">
+      <div class="flex-top padding toolbox">
+        <div class="main">
+          <h2>入／出力</h2>
+        </div>
+        <div class="main">
+          <div class="row-flex textarea-box">
+            <div class="textarea-box-head">入力</div>
+            <div class="textarea-box-body"><textarea id="input" class="input-box" placeholder="入力"></textarea></div>
+          </div>
+          <div class="row-flex textarea-box">
+            <div class="textarea-box-head">出力</div>
+            <div class="textarea-box-body"><textarea id="output" class="input-box" readonly placeholder="出力結果"></textarea></div>
+          </div>
+        </div>
+      </div>
+      <div class="column-flex toolbox">
+        <div class="main">
+          <h2>処理方法</h2>
+        </div>
+        <div class="main row-flex">
+          <div class="column-flex queue" style="width:20em;">
+            <div class="flex-sideheader padding queue-head">
+              <h3>キュー（処理順）</h3>
+            </div>
+            <div id="queue_box" class="padding queue-body flex-sidebar">
+            </div>
+          </div>
+          <div class="flex-body padding queue-box" style="width: calc(100vw - 20em);">
+            <h3>キューへ追加</h3>
+            <div class="queue-toolbox"><select id="cipher_type" class="option-font">
+              <option value="0">選択してください…</option>
+            </select></div>
+            <div id="configures" class="queue-toolbox">
+              
+            </div>
+            <div class="queue-toolbox">
+              <button id="add" class="option-font">追加</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flex-top padding toolbox">
+        <div class="main">
+          <h2>詳細設定</h2>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
