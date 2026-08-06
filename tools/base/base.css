@@ -1,249 +1,315 @@
-/* for base.html */
-* {
-  box-sizing: border-box;
+/* for tools/base/index.php */
+
+.tool {
+  --base-bg: #0e0e1f;          /* サイト共通 --color-background と同値 */
+  --base-panel: #14142c;       /* fieldset / 表ヘッダ */
+  --base-field: #0a0a18;       /* 入力欄の背景 */
+  --base-accent: #9ef01a;      /* 見出し・強調・枠線 */
+  --base-accent-soft: #c8f97a; /* 本文 */
+  --base-accent-dim: #5f7f2a;  /* 非強調の枠線・無効状態 */
+  --base-warn: gold;
+  --base-error: orange;
+
+  --base-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans JP", monospace;
+
+  /* select のドロップダウンや number のスピナー、スクロールバーを暗色で描かせる */
+  color-scheme: dark;
+}
+
+/* lib.css の --color-background-body (#334) を打ち消す */
+body {
+  background-color: var(--base-bg);
+}
+
+/* lib.css の `body * { color: var(--color-text) }` に勝たせる */
+.tool,
+.tool * {
+  color: var(--base-accent-soft);
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* layout */
+.tool {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5em;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.tool-converter,
+.tool-settings {
+  min-width: 0;
+}
+
+.center {
+  text-align: center;
 }
 
 /* media query */
 @media screen and (min-width: 375px) {
-  .container {
+  .tool {
     max-width: 345px;
-  }
-  #pattern2_output td {
-    max-width: 245px;
   }
 }
 @media screen and (min-width: 400px) {
-  .container {
+  .tool {
     max-width: 370px;
-  }
-  #pattern2_output td {
-    max-width: 270px;
   }
 }
 @media screen and (min-width: 576px) {
-  .container {
+  .tool {
     max-width: 540px;
-  }
-  #pattern2_output td {
-    max-width: 440px;
   }
 }
 @media screen and (min-width: 768px) {
-  .container {
+  .tool {
     max-width: 720px;
-  }
-  #pattern2_output td {
-    max-width: 620px;
   }
 }
 @media screen and (min-width: 992px) {
-  .container {
+  .tool {
     max-width: 960px;
-  }
-  #pattern2_output td {
-    max-width: 860px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
   }
 }
-@media screen and (min-width:1280px) {
-  .container {
+@media screen and (min-width: 1280px) {
+  .tool {
     max-width: 1200px;
   }
-  #pattern2_output td {
-    max-width: 1100px;
-  }
-}
-
-/* background color */
-.background, body::before {
-  background-color: #111;
-  display: block;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-/* link */
-a:link {
-  color: dodgerblue;
-}
-a:visited {
-  color: mediumvioletred;
-}
-a:hover {
-  color: orangered;
-}
-a:active {
-  color: indigo;
-}
-
-/* sub styles */
-.inline_block: {
-  display: inline-block;
-}
-.center {
-  text-align: center;
-}
-.margin {
-  margin-left: 20px;
-  margin-bottom: 3px;
-}
-.whitespace_s {
-  margin-bottom: 100px;
-}
-.whitespace {
-  margin-bottom: 200px;
-}
-.separator {
-  margin: 0px 15px 0px 15px;
-}
-
-/* important */
-body {
-  font-family: 'メイリオ', 'Meiryo', 'Noto Sans JP', sans-serif;
-  color: #ddd;
-  margin: 0;
-  padding: 0;
-}
-header {
-  background: #2c2c2c;
-  margin: 0;
-  padding: 0.5em 0 0.5em 1em;
-}
-header h1 {
-  padding: 0;
-  margin: 0;
-}
-header nav {
-  display: block;
-  margin: 0px;
-  padding: 0;
-}
-footer {
-  padding-left: 10px;
-}
-footer .author {
-  text-align: center;
-}
-.container {
-  width: 100%;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px 0 10px 0;
-}
-.ui, .foot_description {
-  width: 100%;
-  text-align: left;
 }
 
 /* interface */
-input[type=number], select {
-  font-size: 120%;
-  border: 1px solid #aaa;
+.tool input[type=number],
+.tool select,
+.tool textarea {
+  background-color: var(--base-field);
+  color: var(--base-accent);
+  caret-color: var(--base-accent);
+  border: 1px solid var(--base-accent-dim);
   border-radius: 0.25em;
-  margin: 0 2px 0 2px;
 }
-input[type=number] {
+
+.tool input[type=number]:focus-visible,
+.tool select:focus-visible,
+.tool textarea:focus-visible,
+.tool button:focus-visible {
+  outline: 2px solid var(--base-accent);
+  outline-offset: 1px;
+}
+
+.tool ::placeholder {
+  color: var(--base-accent-dim);
+  opacity: 1;
+  letter-spacing: normal;
+}
+
+.tool input[type=number],
+.tool select {
+  font-size: 1.1em;
+  min-height: 2em;
+  margin: 0 0.15em;
+}
+
+.tool input[type=number] {
   min-width: 2em;
   max-width: 6em;
+  font-family: var(--base-mono);
 }
-input[type=button], button {
-  font-size: 120%;
-  border: 1px solid #aaa;
+
+.tool button {
+  font-size: 1.1em;
+  min-height: 2em;
+  padding: 0 0.6em;
+  margin: 0 0.1em;
+  color: var(--base-accent);
+  background-color: transparent;
+  border: 1px solid var(--base-accent);
   border-radius: 0.25em;
-  background: #eee;
-  margin: 0 1px 0 1px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
-input[type=button]:hover, button:hover {
-  background-color: #d8d8d8;
+
+.tool button:hover {
+  background-color: rgb(158 240 26 / 0.15);
 }
-input[type=button]:active, button:active {
-  background-color: #aaa;
+
+.tool button:active {
+  color: var(--base-bg);
+  background-color: var(--base-accent);
 }
-textarea {
+
+.tool button:disabled {
+  color: var(--base-accent-dim);
+  background-color: transparent;
+  border-color: var(--base-accent-dim);
+  cursor: not-allowed;
+}
+
+.tool textarea {
   width: 100%;
   height: 100%;
   min-width: 0;
-  min-height: 5.5em;
-  font-size: 1.25em;
-  color: #111;
-  border: 2px groove white;
-  background-color: #eee;
+  min-height: 6em;
+  padding: 0.4em 0.5em;
+  font-size: 1.15em;
+  font-family: var(--base-mono);
+  line-height: 1.6;
+  letter-spacing: 0.25em;
+  word-break: break-all;
   resize: vertical;
-  letter-spacing: 0.5em;
-}
-fieldset {
-  margin-top: 20px;
-  border: 3px groove #ddd;
-  border-radius: 0.3em;
-}
-fieldset legend {
-  text-align: center;
 }
 
-/* miscellious */
-.flexbox {
+.tool fieldset {
+  padding: 0.5em 1em 1em;
+  border: 1px solid var(--base-accent-dim);
+  border-radius: 0.3em;
+  background-color: var(--base-panel);
+}
+
+.tool fieldset + fieldset {
+  margin-top: 1.5em;
+}
+
+.tool legend {
+  padding: 0 0.5em;
+  font-weight: bold;
+  color: var(--base-accent);
+}
+
+.tool .setting-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.3em 0;
+  margin-top: 0.9em;
+  line-height: 2;
+}
+
+/* 入出力枠 */
+.tool .flexbox {
   display: flex;
   flex-direction: row;
   width: 100%;
-  min-height: 9em;
-  border: 1px solid #333;
+  border: 1px solid var(--base-accent-dim);
   border-radius: 0.5em;
   overflow: hidden;
-  padding: 0;
-  margin: 1px 0 1px 0;
+  margin: 0.4em 0;
 }
-.flexhead {
-  flex: 1 1 auto;
-  max-width: 1.5em;
+
+.tool .flexhead {
+  flex: 0 0 auto;
+  width: 2em;
+  padding: 0.6em 0;
   writing-mode: vertical-rl;
-  text-align: center;
-  vertical-align: middle;
-  background-color: #333;
+  text-align: center;  /* 縦書きなので上下方向の中央寄せになる */
+  font-weight: bold;
+  color: var(--base-accent);
+  background-color: var(--base-panel);
 }
-.flexbody {
-  flex: 1 0 auto;
+
+.tool .flexbody {
+  flex: 1 1 auto;
+  min-width: 0;
 }
-.mode2_array2 {
-  width: 100%;
-  display: none;
+
+.tool .flexbody textarea {
+  border: none;
+  border-radius: 0;
+  min-height: 8em;
 }
+
+/* 多方変換モードの結果表 */
+.tool .table-scroll {
+  max-height: 30em;
+  overflow: auto;
+  background-color: var(--base-field);
+}
+
 #pattern2_output {
+  width: 100%;
   border-collapse: collapse;
+  font-family: var(--base-mono);
 }
+
+#pattern2_output th,
 #pattern2_output td {
-  min-width: 25%;
-  word-wrap: break-word;
+  padding: 0.3em 0.6em;
+  border-bottom: 1px solid var(--base-accent-dim);
+  text-align: left;
+  vertical-align: top;
 }
-#pattern2_output th, #pattern2_output td {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+
+#pattern2_output th {
+  width: 4em;
+  white-space: nowrap;
+  color: var(--base-accent);
+  background-color: var(--base-panel);
+}
+
+#pattern2_output td {
+  width: 100%;
+  word-break: break-all;
+}
+
+/* 狭い画面 */
+@media screen and (max-width: 767px) {
+  .tool .flexbox {
+    flex-direction: column;
+  }
+
+  .tool .flexhead {
+    width: 100%;
+    writing-mode: horizontal-tb;
+    text-align: left;
+    padding: 0.3em 0.6em;
+  }
+
+  .tool textarea {
+    letter-spacing: 0.15em;
+  }
+
+  /* iOS の自動ズームを避けるため 16px 未満にしない */
+  .tool input[type=number],
+  .tool select,
+  .tool button {
+    font-size: 16px;
+  }
+
+  .tool .setting-row {
+    gap: 0.3em;
+  }
 }
 
 /* sign color */
 #error {
-  color: orange;
+  color: var(--base-error);
 }
+
 #warn {
-  color: gold;
+  color: var(--base-warn);
 }
-#mode_sign, #mode2_sign, #auto_sign, #ignore_sign {
+
+#mode_sign,
+#mode2_sign,
+#auto_sign,
+#ignore_sign {
   font-weight: bold;
 }
-.mode_simple {
-  color: dodgerblue;
-}
-.mode_multiple {
-  color: tomato;
-}
+
+.mode_simple,
 .enabled {
-  color: violet;
+  color: var(--base-accent);
 }
+
+.mode_multiple {
+  color: #ffd166;
+}
+
 .disabled {
-  color: darkblue;
+  color: #7a7a8c;
 }
