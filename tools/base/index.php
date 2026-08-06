@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../prisoner_tools.php");
+require_once(__DIR__ . "/../../snippets.php");
 ?>
 <!doctype html>
 <html>
@@ -16,8 +16,8 @@ require_once(__DIR__ . "/../../prisoner_tools.php");
     <!-- タイトルタグ -->
     <title>基数変換機</title>
     <!-- 汎用 JS/CSS 読み込み -->
-    <link rel="stylesheet" href="/assets/yoshina.lib.css" />
-    <script src="/assets/yoshina.lib.js"></script>
+    <link rel="stylesheet" href="/src/lib.css" />
+    <script src="/src/lib.js"></script>
 </head>
 
 <body>
