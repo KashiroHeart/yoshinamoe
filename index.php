@@ -52,20 +52,6 @@ require_once(__DIR__ . "/prisoner_tools.php");
                 </ul>
             </article>
         </section>
-        <section>
-            <h2>関連サイト</h2>
-            <article>
-                <ul class="whole-width-list">
-                    <li>
-                        <a href="https://artworks.yoshina.moe/" target="_blank">
-                            監獄日記
-                            <br />
-                            <small>ウチの看板娘の資料です。将来このサイトにも登場します。</small>
-                        </a>
-                    </li>
-                </ul>
-            </article>
-        </section>
     </main>
     <footer>
         <?php footer_text() ?>
