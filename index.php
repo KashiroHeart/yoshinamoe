@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/prisoner_tools.php");
+require_once(__DIR__ . "/snippets.php");
 ?>
 <!DOCTYPE HTML>
 <html>
@@ -15,8 +15,8 @@ require_once(__DIR__ . "/prisoner_tools.php");
     <!-- タイトルタグ -->
     <title>トップページ</title>
     <!-- 汎用 JS/CSS 読み込み -->
-    <link rel="stylesheet" href="/assets/yoshina.lib.css" />
-    <script src="/assets/yoshina.lib.js"></script>
+    <link rel="stylesheet" href="/src/lib.css" />
+    <script src="/src/lib.js"></script>
     <!-- その他 JS/CSS 読み込み -->
 </head>
 
@@ -29,21 +29,21 @@ require_once(__DIR__ . "/prisoner_tools.php");
             <article>
                 <ul class="whole-width-list">
                     <li>
-                        <a href="/legacy/base/" target="_blank">
+                        <a href="/tools/base/" target="_blank">
                             基数変換機
                             <br />
                             <small>任意の基数間での変換、数列の置換等を実装した多機能基数変換機です。</small>
                         </a>
                     </li>
                     <li>
-                        <a href="/legacy/codetable/" target="_blank">
+                        <a href="/tools/codetable/" target="_blank">
                             文字対応表
                             <br />
                             <small>暗号等に使用可能な変換表です。</small>
                         </a>
                     </li>
                     <li>
-                        <a href="/legacy/polybius-old/" target="_blank">
+                        <a href="/tools/polybius/" target="_blank">
                             ポリュビオス暗号ツール
                             <br />
                             <small>ポリュビオス暗号の作成/解読を行うことができます。</small>
