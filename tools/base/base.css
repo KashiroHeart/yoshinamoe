@@ -4,9 +4,9 @@
   --base-bg: #0e0e1f;          /* サイト共通 --color-background と同値 */
   --base-panel: #14142c;       /* fieldset / 表ヘッダ */
   --base-field: #0a0a18;       /* 入力欄の背景 */
-  --base-accent: #9ef01a;      /* 見出し・強調・枠線 */
-  --base-accent-soft: #c8f97a; /* 本文 */
-  --base-accent-dim: #5f7f2a;  /* 非強調の枠線・無効状態 */
+  --base-accent: #b0f04a;      /* 見出し・強調・枠線 */
+  --base-accent-soft: #dbf9ac; /* 本文 */
+  --base-accent-dim: #697f43;  /* 非強調の枠線・無効状態 */
   --base-warn: gold;
   --base-error: orange;
 
@@ -135,7 +135,7 @@ body {
 }
 
 .tool button:hover {
-  background-color: rgb(158 240 26 / 0.15);
+  background-color: rgb(176 240 74 / 0.15);
 }
 
 .tool button:active {
@@ -307,7 +307,7 @@ body {
 }
 
 .mode_multiple {
-  color: #ffd166;
+  color: #ffe099;
 }
 
 .disabled {
