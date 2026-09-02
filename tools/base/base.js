@@ -1,10 +1,6 @@
 init(function () {
   // presets
   const presets = {
-    /*
-    "2": ["0", "1"],
-    "8": ["0", "1", "2", "3", "4", "5", "6", "7"],
-    */
     "10": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
     "16": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"],
     "36": ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"],
@@ -34,13 +30,12 @@ init(function () {
   // elements
   const el = {};
   for (const id of [
-    "input", "output", "convert",
-    "input_base", "output_base",
-    "mode", "mode_sign", "auto", "auto_sign", "ignore", "ignore_sign",
+    "input", "output", "input_base", "output_base", "input_base_echo", "output_caption",
+    "mode", "ignore",
     "warn", "error",
-    "mode2", "mode2_sign",
+    "mode2",
     "preset", "preset_replace", "preset_replace2",
-    "array", "array2", "array_reverse",
+    "array", "array2", "array_reverse", "array_len",
     "pattern1", "pattern2", "pattern2_output",
   ]) {
     el[id] = document.getElementById(id);
@@ -50,7 +45,6 @@ init(function () {
   const state = {
     mode: true,   // true: 一方変換モード / false: 多方変換モード
     mode2: true,  // true: 同数列内で変換 / false: 変換後に別の数列で置換
-    auto: true,
     ignore: true,
   };
 
@@ -87,7 +81,17 @@ init(function () {
     return decToDigits(decimal, to).map(s => rezRule[s]).join("");
   };
 
+  const updateCaptions = function () {
+    el.input_base_echo.textContent = el.input_base.value;
+    el.output_caption.textContent = state.mode
+      ? `${el.output_base.value} 進数`
+      : `2〜${el.output_base.value} 進数`;
+    el.array_len.textContent = el.array.value.length;
+  };
+
   const convert = function () {
+    updateCaptions();
+
     const rule = el.array.value.split("");
 
     const FROM = parseInt(el.input_base.value);
@@ -133,50 +137,33 @@ init(function () {
     if (state.mode) {
       el.output.value = dectoany(decimal, TO);
     } else {
-      const table = el.pattern2_output;
-
-      const head = document.createElement("tr");
-      for (const label of ["基数", "値"]) {
-        const th = document.createElement("th");
-        th.textContent = label;
-        head.append(th);
-      }
-      table.replaceChildren(head);
+      const rows = [];
 
       for (let i = 2; i <= TO; i++) {
-        const tr = document.createElement("tr");
-        const th = document.createElement("th");
-        const td = document.createElement("td");
+        const row = document.createElement("div");
+        row.className = "row";
 
-        th.textContent = i;
-        td.textContent = dectoany(decimal, i);
+        const base = document.createElement("span");
+        base.className = "base";
+        base.textContent = i;
 
-        tr.append(th, td);
-        table.append(tr);
+        const value = document.createElement("span");
+        value.className = "value";
+        value.textContent = dectoany(decimal, i);
+
+        row.append(base, value);
+        rows.push(row);
       }
+
+      el.pattern2_output.replaceChildren(...rows);
     }
   };
 
-  /**
-   * 状態表示（span）の文言と色分けクラスを、現在の状態に合わせて更新する。
-   */
-  const applySign = function (sign, on, labels, classes) {
-    sign.textContent = on ? labels[0] : labels[1];
-    sign.className = on ? classes[0] : classes[1];
-  };
-
   // setup
-  el.convert.addEventListener("click", function () {
-    convert();
-  });
-  el.input.addEventListener("input", function () {
-    if (state.auto) convert();
-  });
+  el.input.addEventListener("input", convert);
   for (const target of [el.input_base, el.output_base]) {
     for (const type of ["input", "change"]) {
-      target.addEventListener(type, function () {
-        if (state.auto) convert();
-      });
+      target.addEventListener(type, convert);
     }
   }
 
@@ -185,6 +172,7 @@ init(function () {
 
     if (cur) {
       el.array.value = cur.join("");
+      convert();
     }
   });
   el.preset_replace2.addEventListener("click", function () {
@@ -192,6 +180,7 @@ init(function () {
 
     if (cur) {
       el.array2.value = cur.join("");
+      convert();
     }
   });
   el.array_reverse.addEventListener("click", function () {
@@ -215,37 +204,27 @@ init(function () {
 
     convert();
   });
+  el.array.addEventListener("input", convert);
+  el.array2.addEventListener("input", convert);
 
-  el.mode.addEventListener("click", function () {
-    state.mode = !state.mode;
+  el.mode.addEventListener("change", function () {
+    state.mode = el.mode.value === "1";
 
     el.pattern1.hidden = !state.mode;
     el.pattern2.hidden = state.mode;
-    applySign(el.mode_sign, state.mode,
-      ["一方変換モード", "多方変換モード"], ["mode_simple", "mode_multiple"]);
 
-    if (state.auto) convert();
+    convert();
   });
-  el.mode2.addEventListener("click", function () {
-    state.mode2 = !state.mode2;
+  el.mode2.addEventListener("change", function () {
+    state.mode2 = el.mode2.value === "1";
 
-    applySign(el.mode2_sign, state.mode2,
-      ["同数列内で変換", "変換後に別の数列で置換"], ["mode_simple", "mode_multiple"]);
     for (const block of array2Blocks) block.hidden = state.mode2;
     el.preset_replace2.disabled = state.mode2;
+
+    convert();
   });
-  el.auto.addEventListener("click", function () {
-    state.auto = !state.auto;
-
-    applySign(el.auto_sign, state.auto, ["有効", "無効"], ["enabled", "disabled"]);
-    el.convert.disabled = state.auto;
-
-    if (state.auto) convert();
-  });
-  el.ignore.addEventListener("click", function () {
-    state.ignore = !state.ignore;
-
-    applySign(el.ignore_sign, state.ignore, ["有効", "無効"], ["enabled", "disabled"]);
+  el.ignore.addEventListener("change", function () {
+    state.ignore = el.ignore.checked;
 
     convert();
   });
@@ -257,4 +236,7 @@ init(function () {
     opt.textContent = presetName[id];
     el.preset.append(opt);
   }
+
+  updateCaptions();
+  convert();
 });

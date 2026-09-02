@@ -1,95 +1,149 @@
 <!doctype html>
-<html>
+<html lang="ja">
   <head>
     <meta charset="utf-8">
     <meta name="robots" content="noindex, nofollow">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:url" content="https://4472.web.fc2.com/tools/polybius/">
     <meta property="og:type" content="article">
-    <meta property="og:title" content="ポリュビオス暗号生成機">
-    <meta property="og:description" content="ポリュビオス暗号の生成/解読を行います">
-    <meta property="og:site_name" content="囹圄">
-    <meta name="author" content="余科">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <meta property="og:title" content="ポリュビオス暗号ツール">
+    <meta property="og:description" content="ポリュビオス暗号の作成/解読を行うことができます。">
+    <meta property="og:site_name" content="ツール置き場">
+    <meta name="author" content="Yoka">
+    <title>ポリュビオス暗号ツール</title>
+    <link rel="stylesheet" href="/src/lib.css" />
+    <script src="/src/lib.js"></script>
+    <script src="/src/palette.js"></script>
     <link rel="stylesheet" href="./polybius.css">
-    <title>ポリュビオス暗号生成機</title>
-    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script src="./polybius.js"></script>
-    <style>
-      body {
-        font-family: 'メイリオ', 'Meiryo', 'Noto Sans JP', sans-serif;
-      }
-      .example {
-        display: inline-block;
-      }
-      textarea {
-        border: 2px groove white;
-        color: #111;
-        background-color: #eee;
-        resize: none;
-        letter-spacing: 1em;
-        font-size: 1.25em;
-        max-width: 500px;
-      }
-      .inline_whitespace{
-        display: inline;
-        margin: 0px 10px 0px 10px;
-      }
-    </style>
+    <script src="./polybius.js" defer></script>
   </head>
   <body>
-    <div class="background"></div>
-    <div class="container">
-      <h1>ポリュビオス暗号生成機</h1>
-      <noscript>
-        <fieldset style="border: 2px groove orangered;">
-          <legend>告</legend>
-          <p>JavaScriptが無効になっているため、ツールを利用できません。</p>
-        </fieldset>
-      </noscript>
-      <fieldset><legend>変換</legend>
-        <p>モード：<a href="javascript:void(0);" id="mode">暗号生成モード</a>　（クリックで変更）</p>
-        <p>並び方：<br>
-          <div class="example_container">
-            <input type="radio" name="sort" value="0" checked>縦&nbsp;<div class="example"><table><tr><td>１</td><td>３</td></tr><tr><td>２</td><td>４</td></tr></table></div><span class="inline_whitespace"></span>
-            <input type="radio" name="sort" value="1">横&nbsp;<div class="example"><table><tr><td>１</td><td>２</td></tr><tr><td>３</td><td>４</td></tr></table></div>
-          </div>
-        <p><label>プリセット：</label><select id="presets">
-          <option value="-">---</option>
-        </select>&nbsp;<button id="preset_import">表配列を上書き</button></p>
-        <p><label id="label1">表配列</label>（文字数：<span id="length1">0</span> / 1225）：<br><textarea id="input1" rows="10" cols="70" maxlength="1225"></textarea></p>
-        <p><label id="label2">平　文</label>（文字数：<span id="length2">0</span>）：<br><textarea id="input2" rows="10" cols="70"></textarea></p>
-        <p><label>表見本</label>：<br></p>
-        <div>
-          <table id="listexample"></table>
+    <header class="site-header">
+      <div class="site-header__crumb">
+        <a href="/" class="site-header__home">ツール置き場</a>
+        <span class="site-header__sep">/</span>
+        <span class="site-header__title">ポリュビオス暗号</span>
+      </div>
+      <button type="button" class="palette-chip" aria-label="カラーパレットを切り替え">
+        <span class="palette-chip__name"></span>
+        <span class="palette-chip__swatches">
+          <span class="sw sw--white"></span><span class="sw sw--p1"></span><span class="sw sw--p2"></span><span class="sw sw--p3"></span><span class="sw sw--black"></span>
+        </span>
+      </button>
+    </header>
+
+    <noscript>
+      <p class="page-pad">JavaScript が無効になっているため、このツールは利用できません。</p>
+    </noscript>
+
+    <main class="pb-main">
+      <div class="tool-col">
+        <div class="tool-field">
+          <span class="label label--p1" id="pb_input_label">平文</span>
+          <span class="count"><span id="pb_text_len">0</span> 文字</span>
         </div>
-        <p>生成結果：</p>
-        <textarea id="result" readonly rows="10" cols="70"></textarea>
-        <p><button id="copy">コピー</button>&nbsp;<span id="copycheck"></span></p>
-      </fieldset>
-      <fieldset><legend>便利機能</legend>
-        <p>基本：</p>
-        <p><input type="checkbox" id="toggle_case" checked>&nbsp;英語アルファベットの大/小文字を区別しない<br>※出力は小文字</p>
-        <p><input type="checkbox" id="toggle_dakuon">&nbsp;濁音・半濁音→濁音、小かな→大かなに自動置換する</p>
-        <p><input type="checkbox" id="toggle_nomultiple">&nbsp;表配列に含まれない文字を平文から自動削除する<br>※濁音置換が優先されます</p>
-        <p>特殊：</p>
-        <p><input type="checkbox" id="toggle_ij">&nbsp;英語アルファベットのi/jを区別しない（5×5英語アルファベット表用）<br>※出力はi</p>
-        <p><input type="checkbox" id="toggle_wo">&nbsp;「を」を「お」に自動置換する（いろは用）
-        <p><input type="checkbox" id="toggle_iroha_dakuon">&nbsp;77を濁音/半濁音とする（いろは用）<br>※濁音置換が優先されます</p>
-        <p><input type="checkbox" id="toggle_0a">&nbsp;暗号文の0をaとして扱う（2タッチ用）</p>
-      </fieldset>
-      <h2>説明</h2>
-      <p>欲しいのに無かったので作りました</p>
-      <p>無駄に1-9A-Zの35桁×35桁(1225文字)まで対応しています</p>
-      <p></p>
-      <div class="whitespace"></div>
-    </div>
+        <textarea id="pb_text" class="tool-io" style="letter-spacing: 0.18em; font-size: 16px;"></textarea>
+
+        <div class="tool-field">
+          <span class="label label--p2" id="pb_result_label">暗号文</span>
+          <button type="button" id="pb_copy" class="link-btn">コピー</button>
+        </div>
+        <div id="pb_result" class="tool-io tool-io--out" style="letter-spacing: 0.16em; font-size: 16px; white-space: pre-wrap;"></div>
+        <div style="flex: 0 0 auto; height: 26px;"></div>
+      </div>
+
+      <div class="tool-col pb-col-right">
+        <label style="display: block; margin-bottom: 18px;">
+          <span class="field-label">モード</span>
+          <select id="pb_mode">
+            <option value="1">暗号生成モード</option>
+            <option value="0">暗号解読モード</option>
+          </select>
+        </label>
+
+        <div class="pb-scroll">
+          <div class="pb-grid-2">
+            <div style="display: flex; flex-direction: column; min-width: 0;">
+              <span class="field-label">プリセット</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <select id="pb_preset" style="flex: 1 1 auto; min-width: 0;">
+                  <option value="-">---</option>
+                </select>
+                <button type="button" id="pb_preset_apply" class="btn-accent1" style="flex: 0 0 auto; padding: 7px 11px;">上書き</button>
+              </div>
+
+              <span class="field-label" style="margin: 18px 0 6px;">並び方</span>
+              <div class="pb-sort">
+                <button type="button" class="pb-sort__btn is-active" data-sort="0">
+                  <span class="pb-sort__label">縦</span>
+                  <span class="pb-sort__grid"><span>1</span><span>3</span><span>2</span><span>4</span></span>
+                </button>
+                <button type="button" class="pb-sort__btn" data-sort="1">
+                  <span class="pb-sort__label">横</span>
+                  <span class="pb-sort__grid"><span>1</span><span>2</span><span>3</span><span>4</span></span>
+                </button>
+              </div>
+            </div>
+
+            <div style="display: flex; flex-direction: column; min-width: 0;">
+              <div class="tool-inline-row">
+                <span class="label label--p1">表配列</span>
+                <span class="count"><span id="pb_list_len">0</span> / 1225</span>
+              </div>
+              <textarea id="pb_list" class="tool-textarea-sm" style="flex: 1 1 auto; min-height: 128px; letter-spacing: 0.16em;"></textarea>
+            </div>
+          </div>
+
+          <div class="tool-inline-row" style="margin: 18px 0 6px;">
+            <span class="field-label" style="margin: 0;">表見本</span>
+            <span class="count" id="pb_grid_caption"></span>
+          </div>
+          <div id="pb_grid" class="pb-preview"></div>
+
+          <div class="subhead" style="margin: 26px 0 12px;">便利機能</div>
+          <div class="pb-options">
+            <label class="checkbox-row">
+              <input type="checkbox" id="pb_opt_case" class="checkbox-native" checked>
+              <span class="checkbox-row__box"><span class="check">✓</span></span>
+              <span>英字の大／小文字を区別しない（出力は小文字）</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="pb_opt_dakuon" class="checkbox-native">
+              <span class="checkbox-row__box"><span class="check">✓</span></span>
+              <span>濁音・半濁音→濁音、小かな→大かなに自動置換</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="pb_opt_nomultiple" class="checkbox-native">
+              <span class="checkbox-row__box"><span class="check">✓</span></span>
+              <span>表配列に無い文字を平文から自動削除</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="pb_opt_ij" class="checkbox-native">
+              <span class="checkbox-row__box"><span class="check">✓</span></span>
+              <span>英字の i / j を区別しない（5×5 英字表用）</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="pb_opt_wo" class="checkbox-native">
+              <span class="checkbox-row__box"><span class="check">✓</span></span>
+              <span>「を」を「お」に自動置換（いろは用）</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="pb_opt_iroha_dakuon" class="checkbox-native">
+              <span class="checkbox-row__box"><span class="check">✓</span></span>
+              <span>77 を濁音／半濁音とする（いろは用）</span>
+            </label>
+            <label class="checkbox-row">
+              <input type="checkbox" id="pb_opt_0a" class="checkbox-native">
+              <span class="checkbox-row__box"><span class="check">✓</span></span>
+              <span>暗号文の 0 を a として扱う（2タッチ用）</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>2025 Yoka / <a href="https://x.com/xx7_44" target="_blank">@xx7_44</a></p>
+    </footer>
   </body>
 </html>
-<!--
-
-ダウンロードなり他サイトに複製なりお好きにしていいですけど、こんな汚いコードを転載したら恥かきますよ。
-
--->

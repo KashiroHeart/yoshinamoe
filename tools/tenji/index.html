@@ -1,109 +1,74 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="ja">
   <head>
-    <!----- 本質情報　起 ------>
     <meta charset="UTF-8">
-    <meta name="author" content="余科">
-    <meta name="description" content="ツールとかを置きたい場所">
-    <meta name="keywords" content="共に高みを目指そうぞ、未熟者よ。">
-    <meta property="og:title" content="点字">
-    <meta property="og:description" content="点字">
-    <meta property="og:url" content="https://4472.web.fc2.com/tools/tenji/">
-    <!-- <meta property="og:image" content=""> -->
-    <meta property="og:type" content="article">
-    <meta property="og:site_name" content="囹圄">
-    <title>点字 - 囹圄</title>
-    <!----- 本質情報　結 ------>
+    <meta name="author" content="Yoka">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow">
-    <title>点字</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <meta property="og:title" content="点字変換">
+    <meta property="og:description" content="かな・漢字と6点／8点点字を相互に変換します。">
+    <meta property="og:url" content="https://4472.web.fc2.com/tools/tenji/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="ツール置き場">
+    <title>点字変換</title>
+    <link rel="stylesheet" href="/src/lib.css" />
+    <script src="/src/lib.js"></script>
+    <script src="/src/palette.js"></script>
+    <link rel="stylesheet" href="./tenji.css">
     <script src="./src/main.js" type="module"></script>
-    <style>
-      body {
-        padding: 0;
-        margin: 0;
-        overflow-x: hidden;
-      }
-      textarea {
-        width: 80vw;
-        height: 6em;
-        font-family: "Consolas";
-      }
-      .area {
-        display: none;
-      }
-      .header {
-        position: sticky;
-        left: 0;
-        top: 0;
-        width: 100vw;
-        height: auto;
-        background-color: white;
-        border-bottom: 3px groove #ddd;
-        z-index: 1;
-      }
-      .header, .resultbox {
-        padding: 0 20px;
-      }
-      .toolbox {
-        padding: 20px;
-      }
-      .toolbox select, .toolbox button {
-        display: inline-block;
-        margin: 0 5px 5px 0;
-        padding: 4px;
-        font-size: 16px;
-        border-radius: 0.35em;
-      }
-      .toolbox button:active {
-        filter: brightness(0.8);
-      }
-      .result {
-        display: none;
-      }
-    </style>
   </head>
   <body>
-    <div class="header">
-      <div>
-        <p style="padding:20px 0 0 0;"><a href="/">TOP</a></p>
-        <h1>点字変換</h1>
+    <header class="site-header">
+      <div class="site-header__crumb">
+        <a href="/" class="site-header__home">ツール置き場</a>
+        <span class="site-header__sep">/</span>
+        <span class="site-header__title">点字変換</span>
       </div>
-      <div class="toolbox">
-        <select id="tenji">
-          <optgroup label="6点点字モード">
-            <option value="k2t">かな→点字</option>
-            <option value="t2k">点字→かな</option>
-          </optgroup>
-          <optgroup label="8点点字モード">
-          	<option value="k2kt">漢字かな→漢点字</option>
-          	<option value="kt2k">漢点字→漢字</option>
-          	<option value="k2kt2">漢字→漢点字（始終点符号なし）</option>
-          	<option value="forcefix">始終点総当たり補完</option>
-          </optgroup>
-        </select>
-        <button id="tenji_run">実行</button>
+      <button type="button" class="palette-chip" aria-label="カラーパレットを切り替え">
+        <span class="palette-chip__name"></span>
+        <span class="palette-chip__swatches">
+          <span class="sw sw--white"></span><span class="sw sw--p1"></span><span class="sw sw--p2"></span><span class="sw sw--p3"></span><span class="sw sw--black"></span>
+        </span>
+      </button>
+    </header>
+
+    <noscript>
+      <p class="page-pad">JavaScript が無効になっているため、このツールは利用できません。</p>
+    </noscript>
+
+    <main class="tenji-main">
+      <div class="tool-col">
+        <div class="tool-field">
+          <span class="label label--p1">入力</span>
+          <span class="count" id="tj_in_label"></span>
+        </div>
+        <textarea id="input" class="tool-io" style="font-size: 17px; line-height: 1.9;" placeholder="変換したい文字を入力してください。"></textarea>
+
+        <div class="tool-field">
+          <span class="label label--p2">出力</span>
+          <span class="count" id="tj_out_label"></span>
+        </div>
+        <div id="output" class="tool-io tool-io--out" style="font-size: 22px; line-height: 1.9;"></div>
+        <div id="tj_rows" class="tool-io tool-io--out tenji-rows" hidden></div>
+
+        <p class="tool-note"><span class="warn" id="tj_warn"></span></p>
       </div>
-      <textarea id="input" name="input"></textarea>
-      <br><label>↓</label>
-    </div>
-    <div class="resultbox">
-      <div class="result">
-        <textarea id="output" name="output"></textarea>
+
+      <div class="tool-col tenji-col-right">
+        <div class="subhead" style="padding-top: 4px;">6 点点字モード</div>
+        <div class="tenji-modes" data-group="6"></div>
+
+        <div class="subhead" style="margin-top: 12px;">8 点点字モード</div>
+        <div class="tenji-modes" data-group="8"></div>
+
+        <p style="margin-top: 18px;">
+          <button type="button" id="tenji_run" class="btn-accent1" style="padding: 8px 22px;">↓　実行　↓</button>
+        </p>
       </div>
-      <div class="result">
-        <p>総当たりモードは冗談みたいに重いので自動実行されません。</p>
-        <table>
-          <thead id="table_header"><tr><th>配列</th><th>変換結果</th></tr></thead>
-          <tbody id="table_body"></tbody>
-        </table>
-      </div>
-      <div class="result" style="display:block;">
-        <h2>説明</h2>
-        <p>未完成です。<br>10文字以上の総当りはクラッシュの恐れがあります。</p>
-        <p>勝手に変換してくれるようにしました。</p>
-      </div>
-    </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>2025 Yoka / <a href="https://x.com/xx7_44" target="_blank">@xx7_44</a></p>
+    </footer>
   </body>
 </html>

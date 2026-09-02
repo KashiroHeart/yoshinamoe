@@ -18,20 +18,20 @@ require_once(__DIR__ . "/snippets.php");
     <!-- 汎用 JS/CSS 読み込み -->
     <link rel="stylesheet" href="/src/lib.css" />
     <script src="/src/lib.js"></script>
+    <script src="/src/palette.js"></script>
     <!-- その他 JS/CSS 読み込み -->
 </head>
 
 <body>
-    <header>
-        <?php header_text() ?>
+    <header class="site-header">
+        <?php header_text(null, false) ?>
     </header>
-    <main>
-        <section>
-            <h2>[404 Not Found]</h2>
-            <p>お探しのページは見つかりませんでした。</p>
-        </section>
+    <main class="notfound">
+        <div class="notfound__code">404</div>
+        <p class="notfound__message">お探しのページは見つかりませんでした。</p>
+        <p class="notfound__back"><a href="/">トップページへ戻る</a></p>
     </main>
-    <footer>
+    <footer class="site-footer">
         <?php footer_text() ?>
     </footer>
 </body>
