@@ -1,315 +1,45 @@
 /* for tools/base/index.php */
+/* 共通スタイルは /src/lib.css を参照。ここでは基数変換機に固有の見た目のみ。 */
 
-.tool {
-  --base-bg: #0e0e1f;          /* サイト共通 --color-background と同値 */
-  --base-panel: #14142c;       /* fieldset / 表ヘッダ */
-  --base-field: #0a0a18;       /* 入力欄の背景 */
-  --base-accent: #b0f04a;      /* 見出し・強調・枠線 */
-  --base-accent-soft: #dbf9ac; /* 本文 */
-  --base-accent-dim: #697f43;  /* 非強調の枠線・無効状態 */
-  --base-warn: gold;
-  --base-error: orange;
-
-  --base-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Noto Sans JP", monospace;
-
-  /* select のドロップダウンや number のスピナー、スクロールバーを暗色で描かせる */
-  color-scheme: dark;
-}
-
-/* lib.css の --color-background-body (#334) を打ち消す */
-body {
-  background-color: var(--base-bg);
-}
-
-/* lib.css の `body * { color: var(--color-text) }` に勝たせる */
-.tool,
-.tool * {
-  color: var(--base-accent-soft);
-}
-
-[hidden] {
-  display: none !important;
-}
-
-/* layout */
-.tool {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 1.5em;
-  width: 100%;
-  margin-inline: auto;
-}
-
-.tool-converter,
-.tool-settings {
-  min-width: 0;
-}
-
-.center {
-  text-align: center;
-}
-
-/* media query */
-@media screen and (min-width: 375px) {
-  .tool {
-    max-width: 345px;
-  }
-}
-@media screen and (min-width: 400px) {
-  .tool {
-    max-width: 370px;
-  }
-}
-@media screen and (min-width: 576px) {
-  .tool {
-    max-width: 540px;
-  }
-}
-@media screen and (min-width: 768px) {
-  .tool {
-    max-width: 720px;
-  }
-}
-@media screen and (min-width: 992px) {
-  .tool {
-    max-width: 960px;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    align-items: start;
-  }
-}
-@media screen and (min-width: 1280px) {
-  .tool {
-    max-width: 1200px;
-  }
-}
-
-/* interface */
-.tool input[type=number],
-.tool select,
-.tool textarea {
-  background-color: var(--base-field);
-  color: var(--base-accent);
-  caret-color: var(--base-accent);
-  border: 1px solid var(--base-accent-dim);
-  border-radius: 0.25em;
-}
-
-.tool input[type=number]:focus-visible,
-.tool select:focus-visible,
-.tool textarea:focus-visible,
-.tool button:focus-visible {
-  outline: 2px solid var(--base-accent);
-  outline-offset: 1px;
-}
-
-.tool ::placeholder {
-  color: var(--base-accent-dim);
-  opacity: 1;
-  letter-spacing: normal;
-}
-
-.tool input[type=number],
-.tool select {
-  font-size: 1.1em;
-  min-height: 2em;
-  margin: 0 0.15em;
-}
-
-.tool input[type=number] {
-  min-width: 2em;
-  max-width: 6em;
-  font-family: var(--base-mono);
-}
-
-.tool button {
-  font-size: 1.1em;
-  min-height: 2em;
-  padding: 0 0.6em;
-  margin: 0 0.1em;
-  color: var(--base-accent);
-  background-color: transparent;
-  border: 1px solid var(--base-accent);
-  border-radius: 0.25em;
-  cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
-}
-
-.tool button:hover {
-  background-color: rgb(176 240 74 / 0.15);
-}
-
-.tool button:active {
-  color: var(--base-bg);
-  background-color: var(--base-accent);
-}
-
-.tool button:disabled {
-  color: var(--base-accent-dim);
-  background-color: transparent;
-  border-color: var(--base-accent-dim);
-  cursor: not-allowed;
-}
-
-.tool textarea {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 6em;
-  padding: 0.4em 0.5em;
-  font-size: 1.15em;
-  font-family: var(--base-mono);
-  line-height: 1.6;
-  letter-spacing: 0.25em;
-  word-break: break-all;
-  resize: vertical;
-}
-
-.tool fieldset {
-  padding: 0.5em 1em 1em;
-  border: 1px solid var(--base-accent-dim);
-  border-radius: 0.3em;
-  background-color: var(--base-panel);
-}
-
-.tool fieldset + fieldset {
-  margin-top: 1.5em;
-}
-
-.tool legend {
-  padding: 0 0.5em;
-  font-weight: bold;
-  color: var(--base-accent);
-}
-
-.tool .setting-row {
+#pattern2_output .row {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.3em 0;
-  margin-top: 0.9em;
-  line-height: 2;
+  gap: 18px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.8;
 }
 
-/* 入出力枠 */
-.tool .flexbox {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  border: 1px solid var(--base-accent-dim);
-  border-radius: 0.5em;
-  overflow: hidden;
-  margin: 0.4em 0;
+#pattern2_output .row .base {
+  flex: 0 0 34px;
+  text-align: right;
+  color: var(--p3);
 }
 
-.tool .flexhead {
-  flex: 0 0 auto;
-  width: 2em;
-  padding: 0.6em 0;
-  writing-mode: vertical-rl;
-  text-align: center;  /* 縦書きなので上下方向の中央寄せになる */
-  font-weight: bold;
-  color: var(--base-accent);
-  background-color: var(--base-panel);
-}
-
-.tool .flexbody {
+#pattern2_output .row .value {
   flex: 1 1 auto;
   min-width: 0;
-}
-
-.tool .flexbody textarea {
-  border: none;
-  border-radius: 0;
-  min-height: 8em;
-}
-
-/* 多方変換モードの結果表 */
-.tool .table-scroll {
-  max-height: 30em;
-  overflow: auto;
-  background-color: var(--base-field);
-}
-
-#pattern2_output {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--base-mono);
-}
-
-#pattern2_output th,
-#pattern2_output td {
-  padding: 0.3em 0.6em;
-  border-bottom: 1px solid var(--base-accent-dim);
-  text-align: left;
-  vertical-align: top;
-}
-
-#pattern2_output th {
-  width: 4em;
-  white-space: nowrap;
-  color: var(--base-accent);
-  background-color: var(--base-panel);
-}
-
-#pattern2_output td {
-  width: 100%;
+  color: var(--text-2);
   word-break: break-all;
 }
 
-/* 狭い画面 */
-@media screen and (max-width: 767px) {
-  .tool .flexbox {
+@media screen and (max-width: 900px) {
+  .tool-main {
+    display: flex;
     flex-direction: column;
+    overflow: auto;
   }
 
-  .tool .flexhead {
-    width: 100%;
-    writing-mode: horizontal-tb;
-    text-align: left;
-    padding: 0.3em 0.6em;
+  .tool-col {
+    min-height: auto;
   }
 
-  .tool textarea {
-    letter-spacing: 0.15em;
+  #input,
+  #output,
+  #pattern2 {
+    min-height: 8em;
   }
 
-  /* iOS の自動ズームを避けるため 16px 未満にしない */
-  .tool input[type=number],
-  .tool select,
-  .tool button {
-    font-size: 16px;
+  .tool-settings {
+    overflow: visible;
   }
-
-  .tool .setting-row {
-    gap: 0.3em;
-  }
-}
-
-/* sign color */
-#error {
-  color: var(--base-error);
-}
-
-#warn {
-  color: var(--base-warn);
-}
-
-#mode_sign,
-#mode2_sign,
-#auto_sign,
-#ignore_sign {
-  font-weight: bold;
-}
-
-.mode_simple,
-.enabled {
-  color: var(--base-accent);
-}
-
-.mode_multiple {
-  color: #ffe099;
-}
-
-.disabled {
-  color: #7a7a8c;
 }

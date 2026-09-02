@@ -17,43 +17,64 @@ require_once(__DIR__ . "/snippets.php");
     <!-- 汎用 JS/CSS 読み込み -->
     <link rel="stylesheet" href="/src/lib.css" />
     <script src="/src/lib.js"></script>
+    <script src="/src/palette.js"></script>
     <!-- その他 JS/CSS 読み込み -->
 </head>
 
 <body>
-    <header>
+    <header class="site-header">
         <?php header_text() ?>
     </header>
-    <main>
+    <main class="page-pad">
         <section>
+            <div class="subhead" style="margin-bottom: 11px;">TOOLS</div>
             <article>
                 <ul class="whole-width-list">
                     <li>
                         <a href="/tools/base/" target="_blank">
-                            基数変換機
-                            <br />
-                            <small>任意の基数間での変換、数列の置換等を実装した多機能基数変換機です。</small>
+                            <span class="tool-mark" style="background: var(--p1);"></span>
+                            <span style="flex: 1 1 auto; min-width: 0;">
+                                <span class="tool-name">基数変換機</span>
+                                <small>任意の基数間での変換、数列の置換等を実装した多機能基数変換機です。</small>
+                            </span>
+                            <span class="tool-slug">BASE</span>
                         </a>
                     </li>
                     <li>
                         <a href="/tools/codetable/" target="_blank">
-                            文字対応表
-                            <br />
-                            <small>暗号等に使用可能な変換表です。</small>
+                            <span class="tool-mark" style="background: var(--p2);"></span>
+                            <span style="flex: 1 1 auto; min-width: 0;">
+                                <span class="tool-name">文字対応表</span>
+                                <small>暗号等に使用可能な変換表です。</small>
+                            </span>
+                            <span class="tool-slug">CODETABLE</span>
                         </a>
                     </li>
                     <li>
                         <a href="/tools/polybius/" target="_blank">
-                            ポリュビオス暗号ツール
-                            <br />
-                            <small>ポリュビオス暗号の作成/解読を行うことができます。</small>
+                            <span class="tool-mark" style="background: var(--p3);"></span>
+                            <span style="flex: 1 1 auto; min-width: 0;">
+                                <span class="tool-name">ポリュビオス暗号ツール</span>
+                                <small>ポリュビオス暗号の作成 / 解読を行うことができます。</small>
+                            </span>
+                            <span class="tool-slug">POLYBIUS</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/tools/tenji/" target="_blank">
+                            <span class="tool-mark" style="background: var(--p1);"></span>
+                            <span style="flex: 1 1 auto; min-width: 0;">
+                                <span class="tool-name">点字変換</span>
+                                <small>かな・漢字と 6 点／8 点点字を相互に変換します。</small>
+                            </span>
+                            <span class="tool-slug">TENJI</span>
                         </a>
                     </li>
                 </ul>
             </article>
         </section>
     </main>
-    <footer>
+    <footer class="site-footer">
         <?php footer_text() ?>
     </footer>
 </body>

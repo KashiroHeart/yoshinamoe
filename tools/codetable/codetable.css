@@ -1,249 +1,101 @@
-/* for base.html */
-* {
-  box-sizing: border-box;
-}
+/* for tools/codetable/index.html */
+/* 共通スタイルは /src/lib.css を参照。ここでは文字対応表に固有の見た目のみ。 */
 
-/* media query */
-@media screen and (min-width: 375px) {
-  .container {
-    max-width: 345px;
-  }
-  #pattern2_output td {
-    max-width: 245px;
-  }
-}
-@media screen and (min-width: 400px) {
-  .container {
-    max-width: 370px;
-  }
-  #pattern2_output td {
-    max-width: 270px;
-  }
-}
-@media screen and (min-width: 576px) {
-  .container {
-    max-width: 540px;
-  }
-  #pattern2_output td {
-    max-width: 440px;
-  }
-}
-@media screen and (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-  #pattern2_output td {
-    max-width: 620px;
-  }
-}
-@media screen and (min-width: 992px) {
-  .container {
-    max-width: 960px;
-  }
-  #pattern2_output td {
-    max-width: 860px;
-  }
-}
-@media screen and (min-width:1280px) {
-  .container {
-    max-width: 1200px;
-  }
-  #pattern2_output td {
-    max-width: 1100px;
-  }
-}
-
-/* background color */
-.background, body::before {
-  background-color: #111;
-  display: block;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-}
-
-/* link */
-a:link {
-  color: dodgerblue;
-}
-a:visited {
-  color: mediumvioletred;
-}
-a:hover {
-  color: orangered;
-}
-a:active {
-  color: indigo;
-}
-
-/* sub styles */
-.inline_block: {
-  display: inline-block;
-}
-.center {
-  text-align: center;
-}
-.margin {
-  margin-left: 20px;
-  margin-bottom: 3px;
-}
-.whitespace_s {
-  margin-bottom: 100px;
-}
-.whitespace {
-  margin-bottom: 200px;
-}
-.separator {
-  margin: 0px 15px 0px 15px;
-}
-
-/* important */
-body {
-  font-family: 'メイリオ', 'Meiryo', 'Noto Sans JP', sans-serif;
-  color: #ddd;
-  margin: 0;
-  padding: 0;
-}
-header {
-  background: #2c2c2c;
-  margin: 0;
-  padding: 0.5em 0 0.5em 1em;
-}
-header h1 {
-  padding: 0;
-  margin: 0;
-}
-header nav {
-  display: block;
-  margin: 0px;
-  padding: 0;
-}
-footer {
-  padding-left: 10px;
-}
-footer .author {
-  text-align: center;
-}
-.container {
-  width: 100%;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 10px 0 10px 0;
-}
-.ui, .foot_description {
-  width: 100%;
-  text-align: left;
-}
-
-/* interface */
-input[type=number], select {
-  font-size: 120%;
-  border: 1px solid #aaa;
-  border-radius: 0.25em;
-  margin: 0 2px 0 2px;
-}
-input[type=number] {
-  min-width: 2em;
-  max-width: 6em;
-}
-input[type=button], button {
-  font-size: 120%;
-  border: 1px solid #aaa;
-  border-radius: 0.25em;
-  background: #eee;
-  margin: 0 1px 0 1px;
-}
-input[type=button]:hover, button:hover {
-  background-color: #d8d8d8;
-}
-input[type=button]:active, button:active {
-  background-color: #aaa;
-}
-textarea {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 5.5em;
-  font-size: 1.25em;
-  color: #111;
-  border: 2px groove white;
-  background-color: #eee;
-  resize: vertical;
-  letter-spacing: 0.5em;
-}
-fieldset {
-  margin-top: 20px;
-  border: 3px groove #ddd;
-  border-radius: 0.3em;
-}
-fieldset legend {
-  text-align: center;
-}
-
-/* miscellious */
-.flexbox {
+.ct-main {
+  padding: 8px 22px 22px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ct-tables {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+}
+
+.ct-tables button {
+  background: var(--s1);
+  padding: 9px 18px;
+  font-size: 13px;
+  color: var(--text-dim);
+  transition: background .16s, color .16s;
+}
+
+.ct-tables button.is-active {
+  background: var(--s3h);
+  color: var(--p1);
+}
+
+.ct-controls {
+  display: flex;
+  gap: 32px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.ct-field select {
+  min-width: 10em;
+}
+
+.ct-columns {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.ct-columns .checkbox-row {
+  gap: 9px;
+}
+
+.ct-table-wrap {
+  background: var(--s1);
+  overflow: auto;
+}
+
+#nlist {
   width: 100%;
-  min-height: 9em;
-  border: 1px solid #333;
-  border-radius: 0.5em;
-  overflow: hidden;
-  padding: 0;
-  margin: 1px 0 1px 0;
-}
-.flexhead {
-  flex: 1 1 auto;
-  max-width: 1.5em;
-  writing-mode: vertical-rl;
-  text-align: center;
-  vertical-align: middle;
-  background-color: #333;
-}
-.flexbody {
-  flex: 1 0 auto;
-}
-.mode2_array2 {
-  width: 100%;
-  display: none;
-}
-#pattern2_output {
   border-collapse: collapse;
 }
-#pattern2_output td {
-  min-width: 25%;
-  word-wrap: break-word;
-}
-#pattern2_output th, #pattern2_output td {
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
+
+#nlist th,
+#nlist td {
+  padding: 11px 17px;
+  text-align: left;
+  white-space: nowrap;
 }
 
-/* sign color */
-#error {
-  color: orange;
+#nlist thead th {
+  background: var(--s2);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--text-dim);
+  font-weight: 400;
+  position: sticky;
+  top: 0;
 }
-#warn {
-  color: gold;
+
+#nlist thead th:first-child {
+  color: var(--text-dim);
 }
-#mode_sign, #mode2_sign, #auto_sign, #ignore_sign {
-  font-weight: bold;
+
+#nlist thead th:not(:first-child) {
+  color: var(--p1);
 }
-.mode_simple {
-  color: dodgerblue;
+
+#nlist tbody td:first-child {
+  font-size: 12px;
+  color: var(--text-faint);
 }
-.mode_multiple {
-  color: tomato;
+
+#nlist tbody td {
+  font-size: 14px;
+  color: var(--text);
 }
-.enabled {
-  color: violet;
-}
-.disabled {
-  color: darkblue;
+
+@media screen and (max-width: 700px) {
+  .ct-controls {
+    gap: 18px;
+  }
 }
