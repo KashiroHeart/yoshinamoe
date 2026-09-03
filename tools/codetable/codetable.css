@@ -2,7 +2,7 @@
 /* 共通スタイルは /src/lib.css を参照。ここでは文字対応表に固有の見た目のみ。 */
 
 .ct-main {
-  padding: 8px 22px 22px;
+  padding: 8px 128px 22px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -95,6 +95,11 @@
 }
 
 @media screen and (max-width: 700px) {
+  .ct-main {
+    padding-left: 22px;
+    padding-right: 22px;
+  }
+
   .ct-controls {
     gap: 18px;
   }

@@ -27,6 +27,8 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
+    padding-left: 22px;
+    padding-right: 22px;
   }
 
   .tool-col {

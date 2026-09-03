@@ -267,7 +267,7 @@ main {
 
 .notfound {
   flex: 1 1 auto;
-  padding: 45px;
+  padding: 45px 68px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -371,16 +371,16 @@ main {
 /* ============ ツールシェル（1 画面完結レイアウト） ============ */
 
 .page-pad {
-  padding: 34px 45px;
+  padding: 34px 128px;
 }
 
 .tool-main {
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 452px;
+  grid-template-columns: minmax(0, 1fr) 359px;
   gap: 26px;
-  padding: 8px 22px 22px;
+  padding: 8px 128px 22px;
 }
 
 .tool-col {
