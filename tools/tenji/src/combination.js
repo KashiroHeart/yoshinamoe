@@ -1,5 +1,3 @@
-/* Source from ChatGPT knowledge; Thank you */
-
 function findCombinations(target, currentSum, currentCombination, combinations) {
     if (currentSum === target) {
         combinations.push(currentCombination.slice()); // Push a copy of the current combination
