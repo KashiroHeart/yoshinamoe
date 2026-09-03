@@ -39,7 +39,7 @@
   scrollbar-color: var(--line) transparent;
 }
 
-html, body {
+html {
   height: 100%;
 }
 
@@ -116,6 +116,7 @@ footer.site-footer {
   display: flex;
   align-items: center;
   padding: 0 22px;
+  flex-shrink: 0;
 }
 
 header.site-header {
@@ -267,7 +268,7 @@ main {
 
 .notfound {
   flex: 1 1 auto;
-  padding: 45px;
+  padding: 45px 68px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -371,22 +372,27 @@ main {
 /* ============ ツールシェル（1 画面完結レイアウト） ============ */
 
 .page-pad {
-  padding: 34px 45px;
+  padding: 34px 128px;
 }
 
 .tool-main {
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 452px;
+  grid-template-columns: minmax(0, 1fr) 359px;
   gap: 26px;
-  padding: 8px 22px 22px;
+  padding: 8px 128px 22px;
 }
 
 .tool-col {
   display: flex;
   flex-direction: column;
   min-height: 0;
+}
+
+/* SP 版でのみ表示するドロワー開閉タブ（PC 版では非表示） */
+.drawer-toggle {
+  display: none;
 }
 
 .tool-field {
@@ -537,4 +543,208 @@ main {
   resize: none;
   outline: none;
   word-break: break-all;
+}
+
+/* ============ SP 版（幅 640px 以下） ============ */
+/* 左右余白は最小限に、ヘッダー・フッターは通常フロー、タッチ操作を想定して
+   ドロップダウン・ボタンは大きめ、チェックボックスは判定領域を広めにとる。 */
+
+@media screen and (max-width: 640px) {
+  header.site-header,
+  footer.site-footer {
+    padding: 0 12px;
+  }
+
+  header.site-header {
+    height: 56px;
+  }
+
+  .site-header__home {
+    font-size: 19px;
+  }
+
+  a.site-header__home {
+    font-size: 13px;
+  }
+
+  .site-header__sep {
+    font-size: 13px;
+  }
+
+  .site-header__title {
+    font-size: 18px;
+  }
+
+  /* パレットチップはスウォッチのみのコンパクト表示にする */
+  .palette-chip {
+    padding: 8px;
+    gap: 0;
+  }
+
+  .palette-chip__name {
+    display: none;
+  }
+
+  .palette-chip__swatches .sw {
+    width: 9px;
+    height: 20px;
+  }
+
+  .palette-chip__swatches .sw--white,
+  .palette-chip__swatches .sw--black {
+    display: none;
+  }
+
+  .page-pad {
+    padding: 8px 12px 16px;
+  }
+
+  .whole-width-list li a {
+    padding: 18px 16px;
+    gap: 16px;
+  }
+
+  .whole-width-list li a:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .whole-width-list .tool-name {
+    font-size: 18px;
+  }
+
+  .whole-width-list small {
+    margin-top: 4px;
+    font-size: 13px;
+  }
+
+  .notfound {
+    padding: 24px 12px;
+  }
+
+  .notfound__code {
+    font-size: 52px;
+  }
+
+  .notfound__message {
+    margin-top: 14px;
+  }
+
+  .notfound__back {
+    font-size: 15px;
+    margin-top: 12px;
+  }
+
+  /* ---- タッチ操作向けフォーム部品 ---- */
+
+  select,
+  input[type="number"],
+  input[type="text"] {
+    font-size: 20px;
+    padding: 9px 10px;
+  }
+
+  .checkbox-row {
+    min-height: 44px;
+    gap: 12px;
+    font-size: 15px;
+  }
+
+  .checkbox-row__box {
+    width: 24px;
+    height: 24px;
+  }
+
+  .checkbox-row__box .check {
+    font-size: 15px;
+  }
+
+  .tool-btn-row {
+    grid-template-columns: 1fr;
+  }
+
+  .tool-btn-row button,
+  .btn-accent1,
+  .btn-accent2 {
+    font-size: 20px;
+    padding: 12px 10px;
+  }
+
+  /* ---- ツールページ：入出力を主役にし、設定は右ドロワーへ ---- */
+
+  .page-pad,
+  .tool-main,
+  .pb-main,
+  .tenji-main {
+    padding: 0;
+  }
+
+  .tool-main,
+  .pb-main,
+  .tenji-main {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    gap: 0;
+  }
+
+  .tool-main > .tool-col:first-child,
+  .pb-main > .tool-col:first-child,
+  .tenji-main > .tool-col:first-child {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0 56px 8px 12px;
+  }
+
+  .tool-io {
+    font-size: 18px;
+  }
+
+  /* ドロワー開閉タブ */
+  .drawer-toggle {
+    display: flex;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    margin-top: -70px;
+    width: 36px;
+    height: 140px;
+    background: var(--s3);
+    color: var(--text-2);
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    writing-mode: vertical-rl;
+    align-items: center;
+    justify-content: center;
+    transition: color .16s;
+  }
+
+  .tool-drawer.is-open .drawer-toggle {
+    color: var(--p1);
+  }
+
+  /* ドロワー本体 */
+  .tool-drawer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 320px;
+    background: var(--s2);
+    transform: translateX(268px);
+    transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+    overflow: hidden;
+  }
+
+  .tool-drawer.is-open {
+    transform: translateX(0);
+  }
+
+  .tool-drawer-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    padding: 16px 16px 24px 60px;
+  }
 }

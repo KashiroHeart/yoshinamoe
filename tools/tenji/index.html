@@ -51,10 +51,12 @@
         <div id="output" class="tool-io tool-io--out" style="font-size: 22px; line-height: 1.9;"></div>
         <div id="tj_rows" class="tool-io tool-io--out tenji-rows" hidden></div>
 
-        <p class="tool-note"><span class="warn" id="tj_warn"></span></p>
+        <p class="tool-note tenji-warn"><span class="warn" id="tj_warn"></span></p>
       </div>
 
-      <div class="tool-col tenji-col-right">
+      <div class="tool-col tenji-col-right tool-drawer">
+        <button type="button" class="drawer-toggle" data-drawer-toggle>設定</button>
+        <div class="tool-drawer-body">
         <div class="subhead" style="padding-top: 4px;">6 点点字モード</div>
         <div class="tenji-modes" data-group="6"></div>
 
@@ -64,6 +66,7 @@
         <p style="margin-top: 18px;">
           <button type="button" id="tenji_run" class="btn-accent1" style="padding: 8px 22px;">↓　実行　↓</button>
         </p>
+        </div>
       </div>
     </main>
 

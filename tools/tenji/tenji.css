@@ -5,9 +5,9 @@
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 400px;
+  grid-template-columns: minmax(0, 1fr) 332px;
   gap: 26px;
-  padding: 8px 22px 22px;
+  padding: 8px 128px 22px;
 }
 
 .tenji-col-right {
@@ -93,11 +93,46 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
+    padding-left: 22px;
+    padding-right: 22px;
   }
 
   #input,
   #output,
   #tj_rows {
     min-height: 8em;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  /* 入出力を主役にし、モード選択は右ドロワーへ（共通のドロワー実装は lib.css 側） */
+  .tenji-main {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .tenji-col-right {
+    overflow: hidden;
+  }
+
+  #output {
+    font-size: 24px;
+  }
+
+  /* 警告文の表示有無でレイアウトがずれないよう、常に1行分の高さを確保する */
+  .tenji-warn {
+    min-height: 40px;
+  }
+
+  .tenji-mode {
+    min-height: 52px;
+    gap: 12px;
+  }
+
+  .tenji-mode__label {
+    font-size: 15px;
   }
 }

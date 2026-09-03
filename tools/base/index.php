@@ -50,8 +50,9 @@ require_once(__DIR__ . "/../../snippets.php");
             <p class="tool-note"><span id="warn" class="warn" aria-live="polite"></span><span id="error" class="error" aria-live="polite"></span></p>
         </div>
 
-        <div class="tool-col" style="min-width: 0;">
-            <div class="tool-settings">
+        <div class="tool-col tool-drawer" style="min-width: 0;">
+            <button type="button" class="drawer-toggle" data-drawer-toggle>設定</button>
+            <div class="tool-settings tool-drawer-body">
                 <div class="subhead">基本設定</div>
 
                 <div class="row2">
@@ -105,7 +106,7 @@ require_once(__DIR__ . "/../../snippets.php");
                         <span class="label label--p1">数列</span>
                         <span class="count"><span id="array_len">0</span> 文字</span>
                     </div>
-                    <textarea id="array" class="tool-textarea-sm" style="height: 52px;">0123456789abcdefghijklmnopqrstuvwxyz</textarea>
+                    <textarea id="array" class="tool-textarea-sm">0123456789abcdefghijklmnopqrstuvwxyz</textarea>
                 </div>
 
                 <div class="mode2_array2" hidden>
@@ -113,7 +114,7 @@ require_once(__DIR__ . "/../../snippets.php");
                         <span class="label label--p2">置換用数列</span>
                         <button type="button" id="array_reverse" class="link-btn">数列を入れ替える</button>
                     </div>
-                    <textarea id="array2" class="tool-textarea-sm" style="height: 44px;">ABCDEFGHIJKLMNOPQRSTUVWXYZ</textarea>
+                    <textarea id="array2" class="tool-textarea-sm">ABCDEFGHIJKLMNOPQRSTUVWXYZ</textarea>
                 </div>
             </div>
         </div>

@@ -105,8 +105,8 @@
     var chips = document.querySelectorAll(".palette-chip");
     for (var i = 0; i < chips.length; i++) {
       chips[i].addEventListener("click", function () {
-        saveIndex((current + 1) % PALETTES.length);
-        apply(current);
+        apply((current + 1) % PALETTES.length);
+        saveIndex(current);
       });
     }
   }
