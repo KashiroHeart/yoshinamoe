@@ -1,2 +1,0 @@
-# YoshinaMoe
-Webサイトのソースコード
