@@ -95,6 +95,13 @@
       root.setProperty(k, n[k]);
     });
 
+    paintNames();
+  }
+
+  // <head> での同期実行時はチップがまだ存在しないため、
+  // DOM 構築後にも名前を反映させる。
+  function paintNames() {
+    var pal = PALETTES[current];
     var nameEls = document.querySelectorAll(".palette-chip__name");
     for (var i = 0; i < nameEls.length; i++) nameEls[i].textContent = pal.name;
   }
@@ -102,6 +109,7 @@
   apply(current);
 
   function wireChips() {
+    paintNames();
     var chips = document.querySelectorAll(".palette-chip");
     for (var i = 0; i < chips.length; i++) {
       chips[i].addEventListener("click", function () {
