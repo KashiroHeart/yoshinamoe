@@ -5,9 +5,9 @@
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 464px;
+  grid-template-columns: minmax(0, 1fr) 560px;
   gap: 26px;
-  padding: 8px 128px 0;
+  padding: 8px 22px 0;
 }
 
 .pb-col-right {
@@ -22,12 +22,6 @@
   display: flex;
   flex-direction: column;
   padding-bottom: 22px;
-}
-
-.pb-preset-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
 }
 
 .pb-grid-2 {
@@ -110,8 +104,6 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
-    padding-left: 22px;
-    padding-right: 22px;
   }
 
   .pb-col-right {
@@ -130,62 +122,5 @@
   #pb_text,
   #pb_result {
     min-height: 8em;
-  }
-}
-
-@media screen and (max-width: 640px) {
-  /* 入出力を主役にし、設定は右ドロワーへ（共通のドロワー実装は lib.css 側） */
-  .pb-main {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    overflow: hidden;
-    padding: 0;
-  }
-
-  .pb-col-right {
-    overflow: hidden;
-  }
-
-  .pb-scroll {
-    overflow: visible;
-  }
-
-  #pb_list {
-    min-height: 96px;
-  }
-
-  /* プリセットの選択と上書きボタンを縦積みにする */
-  .pb-preset-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  #pb_preset {
-    width: 100%;
-  }
-
-  #pb_preset_apply {
-    flex: 0 0 auto;
-    width: 100%;
-  }
-
-  /* 並び方はテキストのみの大きめボタンにする */
-  .pb-sort__btn {
-    padding: 12px 0;
-  }
-
-  .pb-sort__label {
-    font-size: 15px;
-    margin-bottom: 0;
-  }
-
-  .pb-sort__grid {
-    display: none;
-  }
-
-  /* 表見本は SP 版では非表示 */
-  .pb-preview-wrap {
-    display: none;
   }
 }

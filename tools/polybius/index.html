@@ -52,9 +52,7 @@
         <div style="flex: 0 0 auto; height: 26px;"></div>
       </div>
 
-      <div class="tool-col pb-col-right tool-drawer">
-        <button type="button" class="drawer-toggle" data-drawer-toggle>設定</button>
-        <div class="tool-drawer-body">
+      <div class="tool-col pb-col-right">
         <label style="display: block; margin-bottom: 18px;">
           <span class="field-label">モード</span>
           <select id="pb_mode">
@@ -67,7 +65,7 @@
           <div class="pb-grid-2">
             <div style="display: flex; flex-direction: column; min-width: 0;">
               <span class="field-label">プリセット</span>
-              <div class="pb-preset-row">
+              <div style="display: flex; align-items: center; gap: 8px;">
                 <select id="pb_preset" style="flex: 1 1 auto; min-width: 0;">
                   <option value="-">---</option>
                 </select>
@@ -96,13 +94,11 @@
             </div>
           </div>
 
-          <div class="pb-preview-wrap">
-            <div class="tool-inline-row" style="margin: 18px 0 6px;">
-              <span class="field-label" style="margin: 0;">表見本</span>
-              <span class="count" id="pb_grid_caption"></span>
-            </div>
-            <div id="pb_grid" class="pb-preview"></div>
+          <div class="tool-inline-row" style="margin: 18px 0 6px;">
+            <span class="field-label" style="margin: 0;">表見本</span>
+            <span class="count" id="pb_grid_caption"></span>
           </div>
+          <div id="pb_grid" class="pb-preview"></div>
 
           <div class="subhead" style="margin: 26px 0 12px;">便利機能</div>
           <div class="pb-options">
@@ -142,7 +138,6 @@
               <span>暗号文の 0 を a として扱う（2タッチ用）</span>
             </label>
           </div>
-        </div>
         </div>
       </div>
     </main>
