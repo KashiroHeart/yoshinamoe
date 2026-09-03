@@ -1,6 +1,21 @@
 /* for tools/base/index.php */
 /* 共通スタイルは /src/lib.css を参照。ここでは基数変換機に固有の見た目のみ。 */
 
+/* 「変換後」の表示領域（一方変換 / 多方変換で切り替える） */
+#pattern1 {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-height: 0;
+}
+
+#pattern2 {
+  overflow: auto;
+  padding: 12px 22px;
+  flex: 1 1 0;
+  min-height: 0;
+}
+
 #pattern2_output .row {
   display: flex;
   gap: 18px;
@@ -31,12 +46,15 @@
     padding-right: 22px;
   }
 
+  /* 縦積みでは各列を内容なりの高さにする（縮んで下の列と重なるのを防ぐ） */
   .tool-col {
     min-height: auto;
+    flex: 0 0 auto;
   }
 
   #input,
   #output,
+  #pattern1,
   #pattern2 {
     min-height: 8em;
   }

@@ -40,10 +40,10 @@ require_once(__DIR__ . "/../../snippets.php");
                 <span class="label label--p2">変換後</span>
                 <span class="count" id="output_caption"></span>
             </div>
-            <div id="pattern1" style="display: flex; flex-direction: column; min-height: 0; flex: 1 1 0;">
+            <div id="pattern1">
                 <textarea id="output" class="tool-io tool-io--out" style="font-family: var(--font-mono); letter-spacing: 0.06em;" placeholder="ここに変換結果が表示されます。" readonly></textarea>
             </div>
-            <div id="pattern2" class="tool-io" style="overflow: auto; padding: 12px 22px; flex: 1 1 0; min-height: 0;" hidden>
+            <div id="pattern2" class="tool-io" hidden>
                 <div id="pattern2_output"></div>
             </div>
 
