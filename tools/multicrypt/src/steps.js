@@ -80,7 +80,10 @@ const caesar = {
   options: [
     { key: "alphabet", type: "select", label: "配列", value: "abc", choices: ALPHABET_CHOICES },
     { key: "shift", type: "number", label: "桁数", value: 3 },
-    { key: "ignore", type: "checkbox", label: "配列に存在しない文字を無視する", value: true },
+    {
+      key: "unknown", type: "select", label: "配列に存在しない文字の扱い", value: "remove",
+      choices: [["remove", "除去する"], ["keep", "変換せず素通し"], ["error", "変換エラー"]],
+    },
   ],
   run(text, opt) {
     const rule = ALPHABETS.get(opt.alphabet);
@@ -96,7 +99,8 @@ const caesar = {
       const at = rule.indexOf(ch);
 
       if (at === -1) {
-        if (!opt.ignore) throw new Error("配列に存在しない文字が含まれています。");
+        if (opt.unknown === "error") throw new Error("配列に存在しない文字が含まれています。");
+        if (opt.unknown === "keep") out.push(ch);
         continue;
       }
       // 負の桁数でも正の剰余になるよう補正する
@@ -357,7 +361,18 @@ const morseDecode = {
 // ---------------------------------------------------------------- みかか暗号
 
 // 表にない文字はそのまま通すため、変換中は「表から得た文字か」を持ち回る。
-// { text, fromTable }
+// { text, fromTable, upper }
+
+/** 大文字のアルファベットかどうか。数字・記号・仮名は false。 */
+const isUpperAlpha = function (ch) {
+  return ch >= "A" && ch <= "Z";
+};
+
+/** カタカナかどうか（kana.js の toHiragana が変換する範囲と揃える）。 */
+const isKatakana = function (ch) {
+  const code = ch.codePointAt(0);
+  return code >= 0x30a1 && code <= 0x30f6;
+};
 
 const mikakaEncode = {
   id: "mikaka-encode",
@@ -365,18 +380,32 @@ const mikakaEncode = {
   options: [
     {
       key: "kana", type: "select", label: "出力", value: "hiragana",
-      choices: [["hiragana", "ひらがな"], ["katakana", "カタカナ"]],
+      choices: [
+        ["hiragana", "ひらがな"],
+        ["katakana", "カタカナ"],
+        ["lower-hiragana", "小文字→ひらがな、大文字→カタカナ"],
+        ["lower-katakana", "小文字→カタカナ、大文字→ひらがな"],
+      ],
     },
   ],
   run(text, opt) {
+    // 「ひらがな」「カタカナ」は入力の大小を区別しない。
+    // 「小文字→…」の 2 つは入力の大小で出力の仮名を切り替える
+    //（大小を持たない数字・記号は小文字と同じ側に寄せる）。
+    const katakanaFor = function (upper) {
+      if (opt.kana === "hiragana") return false;
+      if (opt.kana === "katakana") return true;
+      if (opt.kana === "lower-hiragana") return upper;
+      return !upper;
+    };
+
     const parts = [];
 
     for (const raw of Array.from(text)) {
-      // 大小は区別しない
       const kana = MIKAKA.toKana.get(raw.toLowerCase());
 
       if (kana === undefined) {
-        parts.push({ text: raw, fromTable: false });
+        parts.push({ text: raw, fromTable: false, upper: false });
         continue;
       }
 
@@ -390,11 +419,11 @@ const mikakaEncode = {
         }
       }
 
-      parts.push({ text: kana, fromTable: true });
+      parts.push({ text: kana, fromTable: true, upper: isUpperAlpha(raw) });
     }
 
     return parts
-      .map(p => (p.fromTable && opt.kana === "katakana" ? toKatakana(p.text) : p.text))
+      .map(p => (p.fromTable && katakanaFor(p.upper) ? toKatakana(p.text) : p.text))
       .join("");
   },
 };
@@ -405,17 +434,39 @@ const mikakaDecode = {
   options: [
     {
       key: "case", type: "select", label: "アルファベット", value: "lower",
-      choices: [["lower", "小文字"], ["upper", "大文字"]],
+      choices: [
+        ["lower", "小文字"],
+        ["upper", "大文字"],
+        ["hiragana-lower", "ひらがな→小文字、カタカナ→大文字"],
+        ["hiragana-upper", "ひらがな→大文字、カタカナ→小文字"],
+      ],
     },
   ],
   run(text, opt) {
-    // ひらがな／カタカナは区別せず、濁音・半濁音・小書き仮名も分解してから引く
-    return decomposeKana(text).map(function (ch) {
-      const key = MIKAKA.toKey.get(ch);
+    // 「小文字」「大文字」は入力のひらがな／カタカナを区別しない。
+    // 「ひらがな→…」の 2 つは入力の仮名の種類で出力の大小を切り替える。
+    const upperFor = function (katakana) {
+      if (opt.case === "lower") return false;
+      if (opt.case === "upper") return true;
+      if (opt.case === "hiragana-lower") return katakana;
+      return !katakana;
+    };
 
-      if (key === undefined) return ch;
-      return opt.case === "upper" ? key.toUpperCase() : key;
-    }).join("");
+    const out = [];
+
+    for (const raw of Array.from(text)) {
+      const katakana = isKatakana(raw);
+
+      // 濁音・半濁音・小書き仮名は分解してから引く（カタカナはひらがなへ寄せる）
+      for (const ch of decomposeKana(raw)) {
+        const key = MIKAKA.toKey.get(ch);
+
+        if (key === undefined) out.push(ch);
+        else out.push(upperFor(katakana) ? key.toUpperCase() : key);
+      }
+    }
+
+    return out.join("");
   },
 };
 
