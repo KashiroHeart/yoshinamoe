@@ -9,6 +9,9 @@
 //   利用者に伝えるべき不正入力は Error を throw する。
 
 import { TABLES, DOT, DASH, normalizeJa, composeJa } from "./morse.js";
+import { ALPHABETS, ALPHABET_CHOICES } from "./alphabets.js";
+import { MIKAKA } from "./mikaka.js";
+import { DAKUTEN, HANDAKUTEN, composeMark, decomposeKana, toKatakana } from "./kana.js";
 
 // ---------------------------------------------------------------- 基数変換
 
@@ -66,6 +69,41 @@ const baseConvert = {
     const out = decToDigits(decimal, to).map(d => DIGITS[d]).join("");
 
     return opt.case === "upper" ? out.toUpperCase() : out;
+  },
+};
+
+// ---------------------------------------------------------------- シーザー
+
+const caesar = {
+  id: "caesar",
+  name: "シーザー",
+  options: [
+    { key: "alphabet", type: "select", label: "配列", value: "abc", choices: ALPHABET_CHOICES },
+    { key: "shift", type: "number", label: "桁数", value: 3 },
+    { key: "ignore", type: "checkbox", label: "配列に存在しない文字を無視する", value: true },
+  ],
+  run(text, opt) {
+    const rule = ALPHABETS.get(opt.alphabet);
+    if (!rule) throw new Error("配列の指定が不正です。");
+
+    const shift = Number(opt.shift);
+    if (!Number.isInteger(shift)) throw new Error("桁数は整数で指定してください。");
+
+    const size = rule.length;
+    const out = [];
+
+    for (const ch of Array.from(text)) {
+      const at = rule.indexOf(ch);
+
+      if (at === -1) {
+        if (!opt.ignore) throw new Error("配列に存在しない文字が含まれています。");
+        continue;
+      }
+      // 負の桁数でも正の剰余になるよう補正する
+      out.push(rule[(((at + shift) % size) + size) % size]);
+    }
+
+    return out.join("");
   },
 };
 
@@ -316,7 +354,77 @@ const morseDecode = {
   },
 };
 
-export const STEP_TYPES = [baseConvert, jpEncode, jpDecode, morseEncode, morseDecode];
+// ---------------------------------------------------------------- みかか暗号
+
+// 表にない文字はそのまま通すため、変換中は「表から得た文字か」を持ち回る。
+// { text, fromTable }
+
+const mikakaEncode = {
+  id: "mikaka-encode",
+  name: "みかかエンコード",
+  options: [
+    {
+      key: "kana", type: "select", label: "出力", value: "hiragana",
+      choices: [["hiragana", "ひらがな"], ["katakana", "カタカナ"]],
+    },
+  ],
+  run(text, opt) {
+    const parts = [];
+
+    for (const raw of Array.from(text)) {
+      // 大小は区別しない
+      const kana = MIKAKA.toKana.get(raw.toLowerCase());
+
+      if (kana === undefined) {
+        parts.push({ text: raw, fromTable: false });
+        continue;
+      }
+
+      // 表から得た濁点・半濁点は、直前の表由来の仮名へ合成する
+      const prev = parts.length ? parts[parts.length - 1] : null;
+      if ((kana === DAKUTEN || kana === HANDAKUTEN) && prev && prev.fromTable) {
+        const composed = composeMark(prev.text, kana);
+        if (composed !== null) {
+          prev.text = composed;
+          continue;
+        }
+      }
+
+      parts.push({ text: kana, fromTable: true });
+    }
+
+    return parts
+      .map(p => (p.fromTable && opt.kana === "katakana" ? toKatakana(p.text) : p.text))
+      .join("");
+  },
+};
+
+const mikakaDecode = {
+  id: "mikaka-decode",
+  name: "みかかデコード",
+  options: [
+    {
+      key: "case", type: "select", label: "アルファベット", value: "lower",
+      choices: [["lower", "小文字"], ["upper", "大文字"]],
+    },
+  ],
+  run(text, opt) {
+    // ひらがな／カタカナは区別せず、濁音・半濁音・小書き仮名も分解してから引く
+    return decomposeKana(text).map(function (ch) {
+      const key = MIKAKA.toKey.get(ch);
+
+      if (key === undefined) return ch;
+      return opt.case === "upper" ? key.toUpperCase() : key;
+    }).join("");
+  },
+};
+
+export const STEP_TYPES = [
+  baseConvert, caesar,
+  jpEncode, jpDecode,
+  morseEncode, morseDecode,
+  mikakaEncode, mikakaDecode,
+];
 
 export const STEP_TYPE_BY_ID = new Map(STEP_TYPES.map(t => [t.id, t]));
 
