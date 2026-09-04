@@ -470,11 +470,83 @@ const mikakaDecode = {
   },
 };
 
+// ------------------------------------------------------------ 区切って付加／削除
+
+const POSITIONS = [["head", "先頭"], ["tail", "末尾"]];
+
+/** 入力を size 文字ごとの節へ分ける。末尾の節は size に満たないことがある。 */
+const chunk = function (text, size) {
+  const chars = Array.from(text);
+  const chunks = [];
+
+  for (let i = 0; i < chars.length; i += size) {
+    chunks.push(chars.slice(i, i + size).join(""));
+  }
+
+  return chunks;
+};
+
+/** 節の長さ指定を検証して取り出す。 */
+const chunkSize = function (value) {
+  const size = Number(value);
+
+  if (!Number.isInteger(size) || size < 1) {
+    throw new Error("文字数は 1 以上の整数で指定してください。");
+  }
+  return size;
+};
+
+const splitAdd = {
+  id: "split-add",
+  name: "区切って付加",
+  options: [
+    { key: "size", type: "number", label: "文字数", value: 2, min: 1 },
+    { key: "position", type: "select", label: "付加位置", value: "head", choices: POSITIONS },
+    { key: "text", type: "text", label: "文字列", value: "" },
+  ],
+  run(text, opt) {
+    const size = chunkSize(opt.size);
+    const add = opt.text;
+
+    return chunk(text, size)
+      .map(part => (opt.position === "head" ? add + part : part + add))
+      .join("");
+  },
+};
+
+const splitRemove = {
+  id: "split-remove",
+  name: "区切って削除",
+  options: [
+    { key: "size", type: "number", label: "文字数", value: 2, min: 1 },
+    { key: "position", type: "select", label: "削除位置", value: "head", choices: POSITIONS },
+    { key: "count", type: "number", label: "削除文字数", value: 1, min: 0 },
+  ],
+  run(text, opt) {
+    const size = chunkSize(opt.size);
+    const count = Number(opt.count);
+
+    if (!Number.isInteger(count) || count < 0) {
+      throw new Error("削除文字数は 0 以上の整数で指定してください。");
+    }
+    if (count > size) {
+      throw new Error("削除文字数が文字数を超えています。");
+    }
+
+    return chunk(text, size).map(function (part) {
+      const chars = Array.from(part);
+      // 末尾の節が size に満たない場合は、その節の長さまでを削除する
+      return (opt.position === "head" ? chars.slice(count) : chars.slice(0, Math.max(0, chars.length - count))).join("");
+    }).join("");
+  },
+};
+
 export const STEP_TYPES = [
   baseConvert, caesar,
   jpEncode, jpDecode,
   morseEncode, morseDecode,
   mikakaEncode, mikakaDecode,
+  splitAdd, splitRemove,
 ];
 
 export const STEP_TYPE_BY_ID = new Map(STEP_TYPES.map(t => [t.id, t]));
