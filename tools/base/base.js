@@ -62,6 +62,8 @@ init(function () {
    * 10 進の BigInt を、指定基数における各桁の値の配列へ分解する。
    */
   const decToDigits = function (decimal, to) {
+    // 基数が 2 未満だと桁が減らず無限ループになるため弾く
+    if (!Number.isInteger(to) || to < 2) return [0];
     if (decimal <= 0n) return [0];
 
     const base = BigInt(to);
@@ -101,6 +103,10 @@ init(function () {
 
     let warned = false;
     // 不正を弾く処理
+    if (!Number.isInteger(FROM) || !Number.isInteger(TO) || FROM < 2 || TO < 2) {
+      error("基数は 2 以上の整数で指定してください。");
+      return;
+    }
     if (state.mode2 && rule.length < Math.max(FROM, TO)) {
       error("指定された基数が数列を超過しています。");
       return;
