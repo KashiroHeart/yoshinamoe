@@ -691,13 +691,15 @@ main {
 
   .tool-main,
   .pb-main,
-  .tenji-main {
+  .tenji-main,
+  .mc-main {
     padding: 0;
   }
 
   .tool-main,
   .pb-main,
-  .tenji-main {
+  .tenji-main,
+  .mc-main {
     display: flex;
     flex-direction: column;
     position: relative;
@@ -707,7 +709,8 @@ main {
 
   .tool-main > .tool-col:first-child,
   .pb-main > .tool-col:first-child,
-  .tenji-main > .tool-col:first-child {
+  .tenji-main > .tool-col:first-child,
+  .mc-main > .tool-col:first-child {
     flex: 1 1 auto;
     min-height: 0;
     padding: 0 56px 8px 12px;
