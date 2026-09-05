@@ -1,0 +1,160 @@
+/* 遁世 feat. 447_prisoner */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
+
+* {
+  box-sizing: border-box;
+  font-family: "Noto Sans JP", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+  padding: 0;
+  margin: 0;
+}
+
+:root {
+  --color-background: #0e0e1f;
+  --color-background-body: #334;
+  --color-text: #ddf;
+  --color-link-hover: mediumblue;
+  --color-link-active: orangered;
+}
+
+html, body {
+  height: 100%;
+  background-color: var(--color-background-body);
+}
+
+body * {
+  color: var(--color-text);
+}
+
+header {
+  height: 6em;
+  padding: 1.5em;
+  background-color: var(--color-background);
+}
+
+header a {
+  text-decoration: none;
+  color: var(--color-text);
+}
+
+main {
+  padding: 2em;
+  color: var(--color-text);
+}
+
+@media screen and (max-width:768px) {
+  main {
+    padding: 2em 2vw;
+  }
+}
+  
+@media screen and (max-width:1279px) {
+  main {
+    padding: 2em 3vw;
+  }
+}
+  
+@media screen and (min-width:1280px) {
+  main {
+    padding: 2em 4vw;
+  }
+}
+
+main.frame-wrapper {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: calc(100% - 9em);
+}
+
+main.frame-wrapper iframe {
+  padding: 0;
+  margin: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  border: none;
+}
+
+main section:not(:first-child) {
+  margin-top: 2em;
+}
+
+main h2 {
+  padding: 0.5em 0;
+}
+
+main a {
+  display: inline-block;
+  text-decoration: underline;
+  color: var(--color-text);
+}
+
+main a:hover {
+  color: var(--color-link-hover);
+}
+
+main a:active {
+  color: var(--color-link-active);
+}
+
+li {
+  list-style: none;
+}
+
+.whole-width-list {
+  width: 100%;
+}
+
+  .whole-width-list li {
+    background-image: radial-gradient(circle at left bottom, #223 0%, #99A 70% 85%, #667 90%, var(--color-background-body) 100%);
+    font-size: large;
+    display: block;
+    margin: 0.2em 0;
+    border: 2px solid;
+    border-image: linear-gradient(to right, #777782, #6161ff 70%, var(--color-background-body) 100%) 1;
+  }
+
+  .whole-width-list li a {
+    display: block;
+    color: #eee;
+    text-decoration: none;
+    width: 100%;
+    height: 100%;
+    padding: 1em;
+  }
+
+  .whole-width-list li a > small {
+    font-size: 0.75em;
+    color: #99e;
+    text-shadow: 0px 1px 2px #116;
+  }
+
+  .whole-width-list li:hover {
+    background-image: radial-gradient(circle at left bottom, #227 0%, #99E 70% 85%, #66A 90%, var(--color-background-body) 100%);
+  }
+
+footer {
+  bottom: 0;
+  padding: 1em;
+  background-color: var(--color-background);
+}
+
+footer a:hover {
+  color: var(--color-link-hover);
+}
+
+footer a:active {
+  color: var(--color-link-active);
+}
+
+body > footer {
+  -webkit-position: sticky;
+  position: sticky;
+  top: 100vh;
+  height: 3em;
+}
