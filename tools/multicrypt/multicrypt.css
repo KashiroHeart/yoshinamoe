@@ -325,6 +325,18 @@
 /* ---- SP 版 ---- */
 
 @media screen and (max-width: 640px) {
+  /* multicrypt.css は lib.css より後に読み込まれるため、PC 用の 4:6 グリッド
+     （非メディアクエリ）がここで打ち消さないと lib.css 側の SP 縦積みが
+     効かず、入力・出力欄がグリッド分割された細い幅のままになる。 */
+  .mc-main {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    gap: 0;
+    padding: 0;
+  }
+
   .mc-main .tool-io {
     font-size: 16px;
   }
