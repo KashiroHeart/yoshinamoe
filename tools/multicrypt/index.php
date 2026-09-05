@@ -70,15 +70,18 @@ require_once(__DIR__ . "/../../snippets.php");
                 <div>
                     <div class="tool-inline-row">
                         <span class="label label--p1">リスト</span>
-                        <span class="count mc-hint">ドックへドラッグして追加</span>
+                        <span class="count mc-hint mc-hint--pc">タップで末尾に追加 / ドラッグで位置を指定</span>
+                        <span class="count mc-hint mc-hint--sp">タップで末尾に追加</span>
                     </div>
                     <div id="mc_list" class="mc-list"></div>
                 </div>
 
                 <div class="mc-dock-block">
-                    <div class="tool-inline-row">
+                    <div class="tool-inline-row mc-dock-header">
                         <span class="label label--p2">ドック</span>
-                        <span class="count"><span id="mc_dock_len">0</span> 変換</span>
+                        <span class="count mc-dock-count"><span id="mc_dock_len">0</span> 変換</span>
+                        <button type="button" id="mc_expand_all" class="link-btn">すべて展開</button>
+                        <button type="button" id="mc_collapse_all" class="link-btn">すべて折りたたむ</button>
                     </div>
                     <div id="mc_dock" class="mc-dock"></div>
                 </div>

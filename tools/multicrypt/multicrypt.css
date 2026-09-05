@@ -88,6 +88,7 @@
 }
 
 /* ---- リスト ---- */
+/* タップで末尾に追加、ドラッグで任意の位置に挿入。 */
 
 .mc-list {
   display: flex;
@@ -112,19 +113,36 @@
   border-color: var(--p1);
 }
 
+.mc-hint--sp {
+  display: none;
+}
+
 /* ---- ドック ---- */
+/* 独立スクロール枠にすることで、段数が増えても末尾が見切れないようにする。 */
+
+.mc-dock-header {
+  gap: 10px;
+}
+
+.mc-dock-header .mc-dock-count {
+  flex: 1 1 auto;
+}
 
 .mc-dock-block {
+  flex: 1 1 auto;
+  min-height: 0;
   display: flex;
   flex-direction: column;
-  min-height: 0;
 }
 
 .mc-dock {
+  flex: 1 1 0;
+  min-height: 140px;
+  overflow: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 96px;
   padding: 8px;
   background: var(--s2);
   border: 1px dashed var(--line);
@@ -144,42 +162,72 @@
 }
 
 .mc-card {
+  flex: 0 0 auto;
   background: var(--s1);
   border: 1px solid var(--line);
+  transition: box-shadow .25s ease;
 }
 
 .mc-card.is-dragging {
   opacity: 0.35;
 }
 
+.mc-card.is-added {
+  box-shadow: 0 0 0 2px var(--p2);
+}
+
+/* カードは既定で 1 行（ハンドル・番号・名前・設定サマリ・開閉・削除）に折りたたむ。
+   開閉はユーザーの操作でのみ切り替わり、追加や並び替えでは変化しない。 */
 .mc-card__head {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  min-height: 44px;
   background: var(--s3);
-  padding: 7px 9px;
+  padding: 4px 6px 4px 2px;
 }
 
 .mc-card__handle {
   flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 40px;
   color: var(--text-faint);
-  font-size: 13px;
+  font-size: 15px;
   line-height: 1;
   cursor: grab;
   touch-action: none;
   user-select: none;
-  padding: 2px 4px;
 }
 
 .mc-card__no {
   flex: 0 0 auto;
+  width: 16px;
+  text-align: right;
   color: var(--p2);
   font-size: 11px;
+  font-family: var(--font-mono);
+}
+
+.mc-card__toggle {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 2px 8px;
+  background: transparent;
+  border: none;
+  padding: 4px 2px;
+  text-align: left;
+  cursor: pointer;
 }
 
 .mc-card__name {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 0 0 auto;
+  max-width: 100%;
   font-size: 13px;
   color: var(--text);
   overflow: hidden;
@@ -187,11 +235,48 @@
   white-space: nowrap;
 }
 
+.mc-card__summary {
+  flex: 1 1 4.5em;
+  min-width: 4.5em;
+  font-size: 11px;
+  color: var(--text-faint);
+  font-family: var(--font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mc-card__aux {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.mc-card__caret,
+.mc-card__remove {
+  width: 30px;
+  height: 34px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+}
+
+.mc-card__caret {
+  font-size: 11px;
+}
+
+.mc-card__remove {
+  font-size: 13px;
+}
+
 .mc-card__body {
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 10px 11px 12px;
+  border-top: 1px solid var(--line);
 }
 
 .mc-card__body .row2 {
@@ -227,7 +312,7 @@
 
 .mc-placeholder {
   flex: 0 0 auto;
-  height: 34px;
+  height: 44px;
   border: 1px dashed var(--p2);
   background: color-mix(in srgb, var(--p2) 12%, transparent);
 }
@@ -240,6 +325,18 @@
 /* ---- SP 版 ---- */
 
 @media screen and (max-width: 640px) {
+  /* multicrypt.css は lib.css より後に読み込まれるため、PC 用の 4:6 グリッド
+     （非メディアクエリ）がここで打ち消さないと lib.css 側の SP 縦積みが
+     効かず、入力・出力欄がグリッド分割された細い幅のままになる。 */
+  .mc-main {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    gap: 0;
+    padding: 0;
+  }
+
   .mc-main .tool-io {
     font-size: 16px;
   }
@@ -248,7 +345,49 @@
     height: 4.4em;
   }
 
-  .mc-hint {
+  .mc-hint--pc {
     display: none;
+  }
+
+  .mc-hint--sp {
+    display: inline;
+    font-size: 10px;
+  }
+
+  /* 幅が限られるため、リストは折り返さず横スクロールにする。 */
+  .mc-list {
+    flex-wrap: nowrap;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+
+  .mc-chip {
+    flex: 0 0 auto;
+    padding: 9px 10px;
+    white-space: nowrap;
+  }
+
+  .mc-dock {
+    min-height: 120px;
+    gap: 6px;
+    padding: 6px;
+  }
+
+  /* すべて展開／折りたたむは PC 専用（ドロワー幅が限られるため）。 */
+  .mc-dock-header .link-btn {
+    display: none;
+  }
+
+  /* 変換名は省略せず全表示（入り切らなければ折り返す）。
+     サマリは名前の次の行へ回し、そこでも入り切らなければ省略する。 */
+  .mc-card__name {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .mc-card__summary {
+    flex: 1 1 100%;
   }
 }
