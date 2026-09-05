@@ -70,6 +70,16 @@ require_once(__DIR__ . "/snippets.php");
                             <span class="tool-slug">TENJI</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="/tools/multicrypt/" target="_blank">
+                            <span class="tool-mark" style="background: var(--p2);"></span>
+                            <span style="flex: 1 1 auto; min-width: 0;">
+                                <span class="tool-name">複合暗号変換機</span>
+                                <small>複数の変換をドラッグ &amp; ドロップで並べ、段階的に変換します。</small>
+                            </span>
+                            <span class="tool-slug">MULTICRYPT</span>
+                        </a>
+                    </li>
                 </ul>
             </article>
         </section>

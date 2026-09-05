@@ -1,0 +1,254 @@
+/* for tools/multicrypt/index.php */
+/* 共通スタイルは /src/lib.css を参照。ここでは複合暗号変換機に固有の見た目のみ。 */
+
+/* 設計上、右段（変換設定）を広めに取るため 4:6 の 2 段組みにする。 */
+.mc-main {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+  gap: 26px;
+  padding: 8px 128px 22px;
+}
+
+.mc-main .tool-io {
+  font-family: var(--font-mono);
+  letter-spacing: 0.04em;
+  font-size: 15px;
+}
+
+/* ---- 変換プロセス（表示モード 2） ---- */
+
+.mc-steps-area {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding-top: 14px;
+}
+
+.mc-steps-area .subhead {
+  flex: 0 0 auto;
+  padding-bottom: 8px;
+}
+
+.mc-steps {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 表示モード 2 のときは入出力を縮めて変換プロセスに場所を譲る。 */
+.mc-main.is-steps .tool-io {
+  flex: 0 0 auto;
+  height: 5.4em;
+}
+
+.mc-step {
+  background: var(--s1);
+  border-left: 2px solid var(--line);
+  padding: 8px 12px;
+}
+
+.mc-step__head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-bottom: 4px;
+}
+
+.mc-step__no {
+  color: var(--p1);
+}
+
+.mc-step__body {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.mc-step.is-error {
+  border-left-color: var(--error);
+}
+
+.mc-step.is-error .mc-step__body {
+  color: var(--error);
+}
+
+.mc-step__empty {
+  color: var(--text-faint2);
+}
+
+/* ---- リスト ---- */
+
+.mc-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mc-chip {
+  background: var(--s3);
+  color: var(--text-2);
+  border: 1px solid var(--line);
+  padding: 7px 11px;
+  font-size: 12px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  transition: color .16s, border-color .16s;
+}
+
+.mc-chip:hover {
+  color: var(--p1);
+  border-color: var(--p1);
+}
+
+/* ---- ドック ---- */
+
+.mc-dock-block {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.mc-dock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 96px;
+  padding: 8px;
+  background: var(--s2);
+  border: 1px dashed var(--line);
+  transition: border-color .16s;
+}
+
+.mc-dock.is-target {
+  border-color: var(--p2);
+}
+
+.mc-dock__empty {
+  margin: auto;
+  font-size: 12px;
+  color: var(--text-faint2);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.mc-card {
+  background: var(--s1);
+  border: 1px solid var(--line);
+}
+
+.mc-card.is-dragging {
+  opacity: 0.35;
+}
+
+.mc-card__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--s3);
+  padding: 7px 9px;
+}
+
+.mc-card__handle {
+  flex: 0 0 auto;
+  color: var(--text-faint);
+  font-size: 13px;
+  line-height: 1;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  padding: 2px 4px;
+}
+
+.mc-card__no {
+  flex: 0 0 auto;
+  color: var(--p2);
+  font-size: 11px;
+}
+
+.mc-card__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mc-card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px 11px 12px;
+}
+
+.mc-card__body .row2 {
+  display: flex;
+  gap: 10px;
+}
+
+.mc-card__body .row2 > label {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.mc-card__body input[type="number"],
+.mc-card__body input[type="text"],
+.mc-card__body select {
+  width: 100%;
+  font-size: 14px;
+}
+
+/* ---- ドラッグ中の表示 ---- */
+
+.mc-ghost {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  background: var(--s3h);
+  border: 1px solid var(--p2);
+  color: var(--text);
+  font-size: 12px;
+  padding: 7px 11px;
+  opacity: 0.9;
+}
+
+.mc-placeholder {
+  flex: 0 0 auto;
+  height: 34px;
+  border: 1px dashed var(--p2);
+  background: color-mix(in srgb, var(--p2) 12%, transparent);
+}
+
+.mc-dragging,
+.mc-dragging * {
+  cursor: grabbing !important;
+}
+
+/* ---- SP 版 ---- */
+
+@media screen and (max-width: 640px) {
+  .mc-main .tool-io {
+    font-size: 16px;
+  }
+
+  .mc-main.is-steps .tool-io {
+    height: 4.4em;
+  }
+
+  .mc-hint {
+    display: none;
+  }
+}
