@@ -10,19 +10,43 @@ init(function () {
     "mc_main", "mc_input", "mc_input_len", "mc_output", "mc_copy",
     "mc_steps_area", "mc_steps", "mc_warn", "mc_error",
     "mc_view", "mc_list", "mc_dock", "mc_dock_len",
+    "mc_expand_all", "mc_collapse_all",
   ]) {
     el[id] = document.getElementById(id);
   }
 
   // ドックに並んだ変換の配列がこのツールの唯一の状態。
-  // { uid, typeId, opt: { ... } }
+  // { uid, typeId, opt: { ... }, expanded }
+  // expanded はユーザーが開閉ボタンを押したときだけ変わる（追加・並び替えでは変化しない）。
   const dock = [];
   let uidSeq = 0;
 
   const createStep = function (typeId) {
     const type = STEP_TYPE_BY_ID.get(typeId);
 
-    return { uid: ++uidSeq, typeId: typeId, opt: defaultOptions(type) };
+    return { uid: ++uidSeq, typeId: typeId, opt: defaultOptions(type), expanded: false };
+  };
+
+  /** カードを折りたたんだときの 1 行サマリ（例: "10 → 2 / 小文字"）。 */
+  const summaryOf = function (step, type) {
+    const parts = [];
+
+    for (const option of type.options) {
+      const value = step.opt[option.key];
+
+      if (option.type === "select") {
+        const hit = option.choices.find(c => c[0] === value);
+        parts.push(hit ? hit[1] : String(value));
+        continue;
+      }
+      if (option.type === "checkbox") {
+        if (value) parts.push(option.label);
+        continue;
+      }
+      parts.push(String(value === "" ? "␣" : value));
+    }
+
+    return parts.filter(v => v).join(" / ");
   };
 
   // ============================================================ 変換の実行
@@ -238,6 +262,7 @@ init(function () {
     el.mc_list.replaceChildren(...chips);
   };
 
+  /** カードは既定で折りたたみ、行タップ／ここでのボタンでのみ開閉する。 */
   const createCard = function (step, index) {
     const type = STEP_TYPE_BY_ID.get(step.typeId);
 
@@ -260,14 +285,44 @@ init(function () {
     no.className = "mc-card__no";
     no.textContent = index + 1;
 
+    const toggleStep = function () {
+      step.expanded = !step.expanded;
+      renderDock();
+    };
+
+    const toggle = document.createElement("button");
+    toggle.type = "button";
+    toggle.className = "mc-card__toggle";
+    toggle.setAttribute("aria-expanded", String(step.expanded));
+    toggle.addEventListener("click", toggleStep);
+
     const name = document.createElement("span");
     name.className = "mc-card__name";
     name.textContent = type.name;
 
+    const summary = document.createElement("span");
+    summary.className = "mc-card__summary";
+    summary.textContent = summaryOf(step, type);
+
+    toggle.append(name, summary);
+
+    const aux = document.createElement("span");
+    aux.className = "mc-card__aux";
+
+    const caret = document.createElement("button");
+    caret.type = "button";
+    caret.className = "mc-card__caret";
+    caret.title = "設定を開閉";
+    caret.setAttribute("aria-label", "設定を開閉");
+    caret.textContent = step.expanded ? "⌃" : "⌄";
+    caret.addEventListener("click", toggleStep);
+
     const remove = document.createElement("button");
     remove.type = "button";
-    remove.className = "link-btn";
-    remove.textContent = "削除";
+    remove.className = "mc-card__remove";
+    remove.title = "削除";
+    remove.setAttribute("aria-label", "削除");
+    remove.textContent = "×";
     remove.addEventListener("click", function () {
       const at = dock.findIndex(s => s.uid === step.uid);
       if (at !== -1) dock.splice(at, 1);
@@ -275,13 +330,17 @@ init(function () {
       run();
     });
 
-    head.append(handle, no, name, remove);
+    aux.append(caret, remove);
+    head.append(handle, no, toggle, aux);
+    card.append(head);
 
-    const body = document.createElement("div");
-    body.className = "mc-card__body";
-    body.append(...createOptionFields(step, type));
+    if (step.expanded) {
+      const body = document.createElement("div");
+      body.className = "mc-card__body";
+      body.append(...createOptionFields(step, type));
+      card.append(body);
+    }
 
-    card.append(head, body);
     return card;
   };
 
@@ -289,7 +348,7 @@ init(function () {
     if (!dock.length) {
       const empty = document.createElement("p");
       empty.className = "mc-dock__empty";
-      empty.textContent = "リストから変換種別をここへドラッグしてください。";
+      empty.textContent = "リストのチップをタップ、またはここへドラッグしてください。";
       el.mc_dock.replaceChildren(empty);
       return;
     }
@@ -300,12 +359,48 @@ init(function () {
   // ================================ ドラッグ&ドロップ（Pointer Events 自前実装）
 
   const DRAG_THRESHOLD = 4;
+  const EDGE_SCROLL_ZONE = 64; // ドックの端からこの距離まで来ると自動スクロールする
 
   let pending = null; // { payload, x, y, pointerId }
-  let drag = null;    // { payload, ghost, placeholder, cardEl }
+  let drag = null;    // { payload, ghost, placeholder, cardEl, insideDock }
+  let lastX = 0;
+  let lastY = 0;
+  let edgeScrollRaf = null;
 
   const dockCards = function () {
     return Array.from(el.mc_dock.querySelectorAll(".mc-card"));
+  };
+
+  /** リストのチップを末尾に追加、またはドックの指定位置（index < 0 で末尾）に挿入する。 */
+  const insertStep = function (typeId, index) {
+    const step = createStep(typeId);
+    dock.splice(index < 0 ? dock.length : index, 0, step);
+    renderDock();
+    run();
+    afterAdd(step.uid, index < 0);
+  };
+
+  const moveStep = function (uid, index) {
+    const from = dock.findIndex(s => s.uid === uid);
+    if (from === -1) return;
+
+    const [step] = dock.splice(from, 1);
+    dock.splice(index, 0, step);
+    renderDock();
+    run();
+  };
+
+  /** 追加直後：末尾追加ならドックを末尾までスクロールし、追加分を一瞬だけ強調する（開閉はしない）。 */
+  const afterAdd = function (uid, toEnd) {
+    requestAnimationFrame(function () {
+      if (toEnd) el.mc_dock.scrollTop = el.mc_dock.scrollHeight;
+
+      const cardEl = dockCards().find(c => Number(c.dataset.uid) === uid);
+      if (!cardEl) return;
+
+      cardEl.classList.add("is-added");
+      setTimeout(function () { cardEl.classList.remove("is-added"); }, 900);
+    });
   };
 
   const beginPointer = function (e, payload) {
@@ -338,16 +433,45 @@ init(function () {
 
     document.body.classList.add("mc-dragging");
 
-    drag = { payload: payload, ghost: ghost, placeholder: placeholder, cardEl: cardEl };
+    lastX = pending.x;
+    lastY = pending.y;
+    drag = { payload: payload, ghost: ghost, placeholder: placeholder, cardEl: cardEl, insideDock: false };
+    edgeScrollRaf = requestAnimationFrame(edgeScrollTick);
   };
+
+  /** ドラッグ中、ポインタがドックの端 64px 圏内に来たら自動スクロールする。 */
+  function edgeScrollTick() {
+    if (!drag) return;
+
+    if (drag.insideDock) {
+      const rect = el.mc_dock.getBoundingClientRect();
+      let delta = 0;
+
+      if (lastY < rect.top + EDGE_SCROLL_ZONE) {
+        delta = -Math.ceil(((rect.top + EDGE_SCROLL_ZONE - lastY) / EDGE_SCROLL_ZONE) * 16);
+      } else if (lastY > rect.bottom - EDGE_SCROLL_ZONE) {
+        delta = Math.ceil(((lastY - (rect.bottom - EDGE_SCROLL_ZONE)) / EDGE_SCROLL_ZONE) * 16);
+      }
+
+      if (delta) {
+        el.mc_dock.scrollTop += delta;
+        updateDrag(lastX, lastY);
+      }
+    }
+
+    edgeScrollRaf = requestAnimationFrame(edgeScrollTick);
+  }
 
   /** ポインタ位置からドロップ先を決め、プレースホルダを差し込む。 */
   const updateDrag = function (x, y) {
+    lastX = x;
+    lastY = y;
     drag.ghost.style.left = (x + 14) + "px";
     drag.ghost.style.top = (y + 14) + "px";
 
     const rect = el.mc_dock.getBoundingClientRect();
     const inside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    drag.insideDock = inside;
 
     if (!inside) {
       el.mc_dock.classList.remove("is-target");
@@ -388,6 +512,7 @@ init(function () {
     const index = commit ? placeholderIndex() : -1;
     const payload = drag.payload;
 
+    cancelAnimationFrame(edgeScrollRaf);
     drag.ghost.remove();
     drag.placeholder.remove();
     if (drag.cardEl) drag.cardEl.classList.remove("is-dragging");
@@ -395,20 +520,10 @@ init(function () {
     document.body.classList.remove("mc-dragging");
     drag = null;
 
-    if (index !== -1) {
-      if (payload.source === "list") {
-        dock.splice(index, 0, createStep(payload.typeId));
-      } else {
-        const from = dock.findIndex(s => s.uid === payload.uid);
-        if (from !== -1) {
-          const [step] = dock.splice(from, 1);
-          dock.splice(index, 0, step);
-        }
-      }
-    }
+    if (index === -1) return;
 
-    renderDock();
-    run();
+    if (payload.source === "list") insertStep(payload.typeId, index);
+    else moveStep(payload.uid, index);
   };
 
   const detach = function () {
@@ -434,7 +549,12 @@ init(function () {
   function onPointerUp(e) {
     if (!pending || e.pointerId !== pending.pointerId) return;
 
-    endDrag(true);
+    const payload = pending.payload;
+    const dragged = !!drag;
+
+    if (dragged) endDrag(true);
+    else if (payload.source === "list") insertStep(payload.typeId, -1);
+
     detach();
   }
 
@@ -446,6 +566,16 @@ init(function () {
   }
 
   // ============================================================ その他の操作
+
+  el.mc_expand_all.addEventListener("click", function () {
+    for (const step of dock) step.expanded = true;
+    renderDock();
+  });
+
+  el.mc_collapse_all.addEventListener("click", function () {
+    for (const step of dock) step.expanded = false;
+    renderDock();
+  });
 
   el.mc_input.addEventListener("input", run);
 
