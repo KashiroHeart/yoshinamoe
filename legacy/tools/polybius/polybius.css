@@ -8,25 +8,18 @@
 */
 
 /* 共通項 */
-.background, body::before {
+/* 旧版は全画面固定の .background / body::before で背景を敷いていたが、
+   ヘッダー・フッターの背後まで覆ってしまうため、メイン領域のみに同じ色を敷く。 */
+main {
   background-color: #111;
-  display: block;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
 }
 .container{
   max-width: 100%;
   background-color: transparent;
-  position: absolute;
   color: #ddd;
-  display: block;
-  z-index: 2;
+  /* 旧版は position: absolute による幅の縮小（shrink-to-fit）だったため、
+     通常フローに戻したうえで同じ幅になるよう inline-block にしている。 */
+  display: inline-block;
 }
 .contents {
   margin: 3px 3px 3px 20px;
@@ -39,9 +32,6 @@
 .tool {
   font-size: 24px;
   text-decoration: none;
-}
-footer {
-  text-align: center;
 }
 
 /* リンク色 */

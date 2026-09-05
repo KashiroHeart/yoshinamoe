@@ -2,7 +2,7 @@
 require_once(__DIR__ . "/snippets.php");
 ?>
 <!DOCTYPE HTML>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
@@ -16,13 +16,15 @@ require_once(__DIR__ . "/snippets.php");
     <!-- タイトルタグ -->
     <title>トップページ（旧版）</title>
     <!-- 汎用 JS/CSS 読み込み -->
+    <link rel="stylesheet" href="/legacy/src/chrome.css" />
     <link rel="stylesheet" href="/legacy/src/lib.css" />
     <script src="/legacy/src/lib.js"></script>
+    <script src="/src/palette.js"></script>
     <!-- その他 JS/CSS 読み込み -->
 </head>
 
 <body>
-    <header>
+    <header class="site-header">
         <?php header_text() ?>
     </header>
     <main>
@@ -50,18 +52,11 @@ require_once(__DIR__ . "/snippets.php");
                             <small>ポリュビオス暗号の作成/解読を行うことができます。</small>
                         </a>
                     </li>
-                    <li>
-                        <a href="/legacy/tools/tenji/" target="_blank">
-                            点字変換
-                            <br />
-                            <small>かな・漢字と6点/8点点字を相互に変換します。</small>
-                        </a>
-                    </li>
                 </ul>
             </article>
         </section>
     </main>
-    <footer>
+    <footer class="site-footer">
         <?php footer_text() ?>
     </footer>
 </body>

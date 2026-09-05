@@ -1,0 +1,246 @@
+/*
+ * 旧デザイン版（legacy）のヘッダー / フッター用スタイル。
+ *
+ * 現行版 /src/lib.css からヘッダー・フッター・カラーパレットチップに関する部分だけを
+ * 抜き出したコピーです。/src/lib.css を丸ごと読み込むと body やフォーム部品まで
+ * 上書きされ、legacy のメイン領域の旧デザインが壊れるため、必要な範囲のみを持っています。
+ *
+ * ※ 現行版のヘッダー / フッターを変更した際は、このファイルにも同じ変更を反映してください。
+ *
+ * メイン領域（ヘッダーとフッターの間）のデザインには関与しません。
+ * 背景・フォント・フォーム部品は各ページの旧 CSS 側が持ちます。
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
+
+/*
+ * HackGen35 Console NF — SIL Open Font License 1.1
+ * Copyright (c) 2019, Yuko OTAWARA. with Reserved Font Name "白源", "HackGen"
+ * https://github.com/yuru7/HackGen  ／ 詳細は /src/fonts/LICENSE_HackGen.md
+ */
+@font-face {
+  font-family: 'HackGen35 Console NF';
+  src:
+    local('HackGen35 Console NF'),
+    local('HackGen35ConsoleNF-Regular'),
+    url('/src/fonts/HackGen35ConsoleNF-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* 主色・副色・強調 — /src/palette.js が上書きするまでの既定値（宵闇） */
+  --p1: #9184d9;
+  --p2: #6b8fd9;
+  --p3: #d9a05c;
+
+  /* 無彩色ランプの既定値（宵闇相当、JS 無効時のフォールバック） */
+  --bg: #18171f;
+  --s1: #1f1d29;
+  --s2: #131118;
+  --s3: #232130;
+  --s3h: #262433;
+  --s4: #0e0d13;
+  --rowalt: #1c1a26;
+  --line: #3b3849;
+
+  /* 文字色（パレットに依存しない） */
+  --text: #e9e9ed;
+  --text-2: #cfd3e5;
+  --text-dim: #9397ab;
+  --text-faint: #75798c;
+  --text-faint2: #595d6c;
+
+  --font-base: 'HackGen35 Console NF', 'HackGen Console NF', 'HackGen35', 'HackGen', 'Hack', 'Zen Maru Gothic', 'Noto Sans JP', system-ui, sans-serif;
+}
+
+/* ヘッダー / フッターを上下に固定し、間をメイン領域に割り当てる */
+html {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg);
+}
+
+body > main {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ============ ヘッダー / フッター ============ */
+
+header.site-header,
+footer.site-footer {
+  display: flex;
+  align-items: center;
+  padding: 0 22px;
+  flex-shrink: 0;
+  /* 各ページの旧 CSS が body にメイリオ等を指定しているため、明示的に上書きする */
+  font-family: var(--font-base);
+  line-height: 1.6;
+}
+
+header.site-header {
+  height: 68px;
+  justify-content: space-between;
+}
+
+footer.site-footer {
+  height: 40px;
+  font-size: 12px;
+  color: var(--text-faint);
+}
+
+footer.site-footer p {
+  margin: 0;
+}
+
+footer.site-footer a,
+footer.site-footer a:link,
+footer.site-footer a:visited {
+  color: var(--text-dim);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+footer.site-footer a:hover {
+  color: var(--p1);
+}
+
+.site-header__crumb {
+  display: flex;
+  align-items: baseline;
+  gap: 11px;
+  min-width: 0;
+}
+
+.site-header__home,
+a.site-header__home:link,
+a.site-header__home:visited {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  text-decoration: none;
+}
+
+a.site-header__home,
+a.site-header__home:link,
+a.site-header__home:visited {
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+a.site-header__home:hover {
+  color: var(--p1);
+}
+
+.site-header__sep {
+  font-size: 18px;
+  color: var(--line);
+}
+
+.site-header__title {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ============ カラーパレットチップ ============ */
+
+.palette-chip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--s2);
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  padding: 6px 8px 6px 11px;
+  font-family: var(--font-base);
+  font-size: 12px;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: background .16s;
+}
+
+.palette-chip:hover {
+  background: var(--s3h);
+}
+
+.palette-chip__swatches {
+  display: flex;
+  gap: 3px;
+}
+
+.palette-chip__swatches .sw {
+  width: 10px;
+  height: 14px;
+}
+
+.palette-chip__swatches .sw--white { background: #eceef5; }
+.palette-chip__swatches .sw--p1 { background: var(--p1); }
+.palette-chip__swatches .sw--p2 { background: var(--p2); }
+.palette-chip__swatches .sw--p3 { background: var(--p3); }
+.palette-chip__swatches .sw--black { background: #16171d; }
+
+/* ============ SP 版（幅 640px 以下） ============ */
+
+@media screen and (max-width: 640px) {
+  header.site-header,
+  footer.site-footer {
+    padding: 0 12px;
+  }
+
+  header.site-header {
+    height: 56px;
+  }
+
+  .site-header__home {
+    font-size: 19px;
+  }
+
+  a.site-header__home,
+  a.site-header__home:link,
+  a.site-header__home:visited {
+    font-size: 13px;
+  }
+
+  .site-header__sep {
+    font-size: 13px;
+  }
+
+  .site-header__title {
+    font-size: 18px;
+  }
+
+  /* パレットチップはスウォッチのみのコンパクト表示にする */
+  .palette-chip {
+    padding: 8px;
+    gap: 0;
+  }
+
+  .palette-chip__name {
+    display: none;
+  }
+
+  .palette-chip__swatches .sw {
+    width: 9px;
+    height: 20px;
+  }
+
+  .palette-chip__swatches .sw--white,
+  .palette-chip__swatches .sw--black {
+    display: none;
+  }
+}

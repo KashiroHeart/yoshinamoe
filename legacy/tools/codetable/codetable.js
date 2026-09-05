@@ -1,36 +1,42 @@
 import { list1, list2, list3, list4 } from "./codes.js";
 
-$(function() {
+init(function() {
   var EX = false;
-  
-  var selectbox = $("#nselect");
-  var sortbox = $("#nsort1, #nsort2");
-  
+
+  var selectbox = document.getElementById("nselect");
+  var sortbox1 = document.getElementById("nsort1");
+  var sortbox2 = document.getElementById("nsort2");
+  var thead = document.querySelector("#nlist thead");
+  var tbody = document.querySelector("#nlist tbody");
+  var form = document.getElementById("nshowing");
+
   // functions
   var listheadupdate = function(key){
-    var thead = $("#nlist thead");
-    thead.html("");
-    var L2 = list2[key], L4 = list4[key];
-    
+    thead.innerHTML = "";
+    var L4 = list4[key];
+
     // create table header
-    var header = $("<tr></tr>");
-    $("<th>No.</th>").appendTo(header);
+    var header = document.createElement("tr");
+    var numhead = document.createElement("th");
+    numhead.textContent = "No.";
+    header.appendChild(numhead);
     var param = EX ? Object.assign(L4.param, L4.exparam || {}) : L4.param;
     for ( var i in param ){
-      var name = $("<th></th>");
-      name.attr("class", "c-"+i).text(param[i]).appendTo(header);
+      var name = document.createElement("th");
+      name.className = "c-"+i;
+      name.textContent = param[i];
+      header.appendChild(name);
     }
-    thead.append(header);
+    thead.appendChild(header);
   }
   var listbodyupdate = function(key){
-    var tbody = $("#nlist tbody");
-    tbody.html("");
+    tbody.innerHTML = "";
     var L2 = [].concat(list2[key]), L4 = list4[key];
-    
+
     // sorting
-    var rule = sortbox.eq(0).val().split("-"),
-        order = sortbox.eq(1).val();
-    
+    var rule = sortbox1.value.split("-"),
+        order = sortbox2.value;
+
     var L1 = list1[rule[1]];
     if( L1 ){
       L2 = L2.sort((a,b) => {
@@ -57,94 +63,111 @@ $(function() {
         });
       }
     }
-    
+
     // create table body
     for ( var i in L2 ){
-      var body = $("<tr></tr>");
-      var numcell = $("<td></td>");
-      numcell.text(Number(i)+1).appendTo(body);
+      var body = document.createElement("tr");
+      var numcell = document.createElement("td");
+      numcell.textContent = Number(i)+1;
+      body.appendChild(numcell);
       var param = EX ? Object.assign(L4.param, L4.exparam || {}) : L4.param;
       for ( var j in param ){
-        var cell = $("<td></td>");
-        cell.attr("class", "c-"+j).text(L2[i][j]).appendTo(body);
+        var cell = document.createElement("td");
+        cell.className = "c-"+j;
+        cell.textContent = L2[i][j];
+        body.appendChild(cell);
       }
-      tbody.append(body);
+      tbody.appendChild(body);
     }
   }
   var filtering = function(e){
-    var checkboxes = $("input[type='checkbox']").toArray();
-    
-    $("th, td").css("display", "table-cell");
+    var checkboxes = document.querySelectorAll("input[type='checkbox']");
+
+    document.querySelectorAll("th, td").forEach(function(cell){
+      cell.style.display = "table-cell";
+    });
     var unshow = [];
-    for( var i of checkboxes ){
-      var box = $(i);
-      if( box.prop("checked") ) continue;
-      unshow.push(".c-" + box.attr("name"));
+    for( var box of checkboxes ){
+      if( box.checked ) continue;
+      unshow.push(".c-" + box.getAttribute("name"));
     }
-    $(unshow.join(", ")).css("display", "none");
+    if( unshow.length ){
+      document.querySelectorAll(unshow.join(", ")).forEach(function(cell){
+        cell.style.display = "none";
+      });
+    }
   }
   var listupdate = function(t){
     // get mastertable
-    var key = selectbox.val();
+    var key = selectbox.value;
     if( !list4[key] ) return;
-    
+
     // initialize
-    var thead = $("#nlist thead");
-    var tbody = $("#nlist tbody");
-    var sortbox1 = $("#nsort1");
-    var sortbox2 = $("#nsort2");
-    var form = $("#nshowing");
-    
-    sortbox1.html("");
-    form.html("");
-    
+    sortbox1.innerHTML = "";
+    form.innerHTML = "";
+
     // create sort options
-    var def = $("<option value='-'>デフォルト</option>");
-    def.appendTo(sortbox1);
-    
+    var def = document.createElement("option");
+    def.value = "-";
+    def.textContent = "デフォルト";
+    sortbox1.appendChild(def);
+
     for ( var i of list4[key].sort ) {
-      var opt = $("<option></option>");
-      opt.val(i.rule.join("-")).text(i.name).appendTo(sortbox1);
+      var opt = document.createElement("option");
+      opt.value = i.rule.join("-");
+      opt.textContent = i.name;
+      sortbox1.appendChild(opt);
     }
-    
+
     // create showing options
     var param = EX ? Object.assign(list4[key].param, list4[key].exparam || {}) : list4[key].param;
     for ( var i in param ) {
-      var opt = $("<label></label>");
-      opt.attr("for", i).text(param[i]);
-      
-      var checkbox = $("<input type='checkbox'/>");
-      checkbox.attr({ name: i, id: i, }).prop("checked", true).on("change", filtering).appendTo(opt);
-      
-      form.append(opt);
+      var opt = document.createElement("label");
+      opt.setAttribute("for", i);
+      opt.textContent = param[i];
+
+      var checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.name = i;
+      checkbox.id = i;
+      checkbox.checked = true;
+      checkbox.addEventListener("change", filtering);
+      opt.appendChild(checkbox);
+
+      form.appendChild(opt);
     }
-    
+
     // update
     if( typeof t=="object" ){
       for ( var i in t ){
-        $("#"+i).val(t[i]);
+        var target = document.getElementById(i);
+        if( target ) target.value = t[i];
       }
     }
-    
+
     listheadupdate(key);
     listbodyupdate(key);
   };
-  
-  selectbox.on("change", function(){
+
+  selectbox.addEventListener("change", function(){
     listupdate();
   });
-  sortbox.on("change", function(){
-    var key = selectbox.val();
-    listbodyupdate(key);
-    filtering();
+  [sortbox1, sortbox2].forEach(function(el){
+    el.addEventListener("change", function(){
+      var key = selectbox.value;
+      listbodyupdate(key);
+      filtering();
+    });
   });
-  
+
   // create selectbox
   for ( var i in list4 ){
-    var opt = $("<option></option>");
-    opt.val(i).text(list3[i]).appendTo(selectbox);
+    var opt = document.createElement("option");
+    opt.value = i;
+    opt.textContent = list3[i];
+    selectbox.appendChild(opt);
   }
-  
+
   // focus to exist option
   if( location.search.startsWith("?") ){
     var keys = location.search.slice(1).split("&");
@@ -155,7 +178,7 @@ $(function() {
 
       switch(key[0]){
         case "table":
-          selectbox.val(key[1]);
+          selectbox.value = key[1];
           break;
         case "sort":
           opt.nsort1 = key[1];
@@ -171,7 +194,7 @@ $(function() {
     }
     listupdate(opt);
   }else{
-    selectbox.val("morse");
+    selectbox.value = "morse";
     listupdate();
   }
 });

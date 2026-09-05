@@ -54,17 +54,10 @@
 }
 
 /* background color */
-.background, body::before {
+/* 旧版は全画面固定の .background / body::before で背景を敷いていたが、
+   ヘッダー・フッターの背後まで覆ってしまうため、メイン領域のみに同じ色を敷く。 */
+main {
   background-color: #111;
-  display: block;
-  position: fixed;
-  left: 0;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
 }
 
 /* link */
@@ -108,26 +101,6 @@ body {
   color: #ddd;
   margin: 0;
   padding: 0;
-}
-header {
-  background: #2c2c2c;
-  margin: 0;
-  padding: 0.5em 0 0.5em 1em;
-}
-header h1 {
-  padding: 0;
-  margin: 0;
-}
-header nav {
-  display: block;
-  margin: 0px;
-  padding: 0;
-}
-footer {
-  padding-left: 10px;
-}
-footer .author {
-  text-align: center;
 }
 .container {
   width: 100%;
