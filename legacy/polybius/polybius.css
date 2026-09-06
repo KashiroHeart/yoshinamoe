@@ -1,0 +1,103 @@
+/* 戦犯メディアクエリ */
+/*
+@media screen and (max-width: 480px) {
+  .background, .container {
+    width: 100%;
+  }
+}
+*/
+
+/* 共通項 */
+/* 旧版は全画面固定の .background / body::before で背景を敷いていたが、
+   ヘッダー・フッターの背後まで覆ってしまうため、メイン領域のみに同じ色を敷く。 */
+main {
+  background-color: #111;
+}
+.container{
+  max-width: 100%;
+  background-color: transparent;
+  color: #ddd;
+  /* 旧版は position: absolute による幅の縮小（shrink-to-fit）だったため、
+     通常フローに戻したうえで同じ幅になるよう inline-block にしている。 */
+  display: inline-block;
+}
+.contents {
+  margin: 3px 3px 3px 20px;
+  padding: 3px;
+  border-bottom: 2px groove lightgray;
+}
+.contents .description {
+  margin-left: 20px;
+}
+.tool {
+  font-size: 24px;
+  text-decoration: none;
+}
+
+/* リンク色 */
+a:link {
+  color: cyan;
+}
+a:visited {
+  color: orchid;
+}
+a:hover {
+  color: orangered;
+}
+a:active {
+  color: mediumorchid;
+}
+
+/* 細かい設定 */
+.inline_block: {
+  display: inline-block;
+}
+.center {
+  text-align: center;
+}
+.margin {
+  margin-left: 20px;
+  margin-bottom: 3px;
+}
+.whitespace_s {
+  margin-bottom: 100px;
+}
+.whitespace {
+  margin-bottom: 200px;
+}
+.separator {
+  margin: 0px 15px 0px 15px;
+}
+
+/* ツール用 */
+select, select option {
+  background-color: #111;
+  color: #ddd;
+}
+table {
+  border: 3px solid #eee;
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+th td {
+  text-align: center;
+  font-family: 'Inconsolata', "Meiryo", monospace;
+}
+#nlist th, #nlist td {
+  text-align: center;
+  font-family: 'Inconsolata', "Meiryo", monospace;
+  height: 1.6em;
+  min-width: 200px;
+}
+th {
+  border: 2px solid #eee;
+}
+td {
+  border: 1px solid #ccc;
+}
+select {
+  font-size: 1.5em;
+}
+a#mode, a#mode2 {
+  background: #555;
+}

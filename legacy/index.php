@@ -1,8 +1,8 @@
 <?php
-require_once(__DIR__ . "/snippets.php");
+require_once(__DIR__ . "/../snippets.php");
 ?>
 <!DOCTYPE HTML>
-<html>
+<html lang="ja">
 
 <head>
     <meta charset="UTF-8">
@@ -16,52 +16,47 @@ require_once(__DIR__ . "/snippets.php");
     <!-- タイトルタグ -->
     <title>トップページ（旧版）</title>
     <!-- 汎用 JS/CSS 読み込み -->
+    <link rel="stylesheet" href="/src/chrome.css" />
     <link rel="stylesheet" href="/legacy/src/lib.css" />
     <script src="/legacy/src/lib.js"></script>
+    <script src="/src/palette.js"></script>
     <!-- その他 JS/CSS 読み込み -->
 </head>
 
 <body>
-    <header>
-        <?php header_text() ?>
+    <header class="site-header">
+        <?php header_text(null, true, "/legacy/") ?>
     </header>
     <main>
         <section>
             <article>
                 <ul class="whole-width-list">
                     <li>
-                        <a href="/legacy/tools/base/" target="_blank">
+                        <a href="/legacy/base/" target="_blank">
                             基数変換機
                             <br />
                             <small>任意の基数間での変換、数列の置換等を実装した多機能基数変換機です。</small>
                         </a>
                     </li>
                     <li>
-                        <a href="/legacy/tools/codetable/" target="_blank">
+                        <a href="/legacy/codetable/" target="_blank">
                             文字対応表
                             <br />
                             <small>暗号等に使用可能な変換表です。</small>
                         </a>
                     </li>
                     <li>
-                        <a href="/legacy/tools/polybius/" target="_blank">
+                        <a href="/legacy/polybius/" target="_blank">
                             ポリュビオス暗号ツール
                             <br />
                             <small>ポリュビオス暗号の作成/解読を行うことができます。</small>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/legacy/tools/tenji/" target="_blank">
-                            点字変換
-                            <br />
-                            <small>かな・漢字と6点/8点点字を相互に変換します。</small>
                         </a>
                     </li>
                 </ul>
             </article>
         </section>
     </main>
-    <footer>
+    <footer class="site-footer">
         <?php footer_text() ?>
     </footer>
 </body>

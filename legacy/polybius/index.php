@@ -1,0 +1,109 @@
+<?php
+require_once(__DIR__ . "/../../snippets.php");
+?>
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- OGP -->
+    <?php ogp(
+        "ポリュビオス暗号生成機",
+        "ポリュビオス暗号の生成/解読を行います"
+    ); ?>
+    <!-- タイトルタグ -->
+    <title>ポリュビオス暗号生成機</title>
+    <!-- 汎用 JS/CSS 読み込み -->
+    <link rel="stylesheet" href="/src/chrome.css" />
+    <script src="/legacy/src/lib.js"></script>
+    <script src="/src/palette.js"></script>
+    <!-- その他 JS/CSS 読み込み -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./polybius.css">
+    <script src="./polybius.js" defer></script>
+    <style>
+      body {
+        font-family: 'メイリオ', 'Meiryo', 'Noto Sans JP', sans-serif;
+      }
+      .example {
+        display: inline-block;
+      }
+      textarea {
+        border: 2px groove white;
+        color: #111;
+        background-color: #eee;
+        resize: none;
+        letter-spacing: 1em;
+        font-size: 1.25em;
+        max-width: 500px;
+      }
+      .inline_whitespace{
+        display: inline;
+        margin: 0px 10px 0px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="site-header">
+      <?php header_text("ポリュビオス暗号ツール", true, "/legacy/") ?>
+    </header>
+    <main>
+      <div class="container">
+        <h1>ポリュビオス暗号生成機</h1>
+        <noscript>
+          <fieldset style="border: 2px groove orangered;">
+            <legend>告</legend>
+            <p>JavaScriptが無効になっているため、ツールを利用できません。</p>
+          </fieldset>
+        </noscript>
+        <fieldset><legend>変換</legend>
+          <p>モード：<a href="javascript:void(0);" id="mode">暗号生成モード</a>　（クリックで変更）</p>
+          <p>並び方：<br>
+            <div class="example_container">
+              <input type="radio" name="sort" value="0" checked>縦&nbsp;<div class="example"><table><tr><td>１</td><td>３</td></tr><tr><td>２</td><td>４</td></tr></table></div><span class="inline_whitespace"></span>
+              <input type="radio" name="sort" value="1">横&nbsp;<div class="example"><table><tr><td>１</td><td>２</td></tr><tr><td>３</td><td>４</td></tr></table></div>
+            </div>
+          <p><label>プリセット：</label><select id="presets">
+            <option value="-">---</option>
+          </select>&nbsp;<button id="preset_import">表配列を上書き</button></p>
+          <p><label id="label1">表配列</label>（文字数：<span id="length1">0</span> / 1225）：<br><textarea id="input1" rows="10" cols="70" maxlength="1225"></textarea></p>
+          <p><label id="label2">平　文</label>（文字数：<span id="length2">0</span>）：<br><textarea id="input2" rows="10" cols="70"></textarea></p>
+          <p><label>表見本</label>：<br></p>
+          <div>
+            <table id="listexample"></table>
+          </div>
+          <p>生成結果：</p>
+          <textarea id="result" readonly rows="10" cols="70"></textarea>
+          <p><button id="copy">コピー</button>&nbsp;<span id="copycheck"></span></p>
+        </fieldset>
+        <fieldset><legend>便利機能</legend>
+          <p>基本：</p>
+          <p><input type="checkbox" id="toggle_case" checked>&nbsp;英語アルファベットの大/小文字を区別しない<br>※出力は小文字</p>
+          <p><input type="checkbox" id="toggle_dakuon">&nbsp;濁音・半濁音→濁音、小かな→大かなに自動置換する</p>
+          <p><input type="checkbox" id="toggle_nomultiple">&nbsp;表配列に含まれない文字を平文から自動削除する<br>※濁音置換が優先されます</p>
+          <p>特殊：</p>
+          <p><input type="checkbox" id="toggle_ij">&nbsp;英語アルファベットのi/jを区別しない（5×5英語アルファベット表用）<br>※出力はi</p>
+          <p><input type="checkbox" id="toggle_wo">&nbsp;「を」を「お」に自動置換する（いろは用）
+          <p><input type="checkbox" id="toggle_iroha_dakuon">&nbsp;77を濁音/半濁音とする（いろは用）<br>※濁音置換が優先されます</p>
+          <p><input type="checkbox" id="toggle_0a">&nbsp;暗号文の0をaとして扱う（2タッチ用）</p>
+        </fieldset>
+        <h2>説明</h2>
+        <p>欲しいのに無かったので作りました</p>
+        <p>無駄に1-9A-Zの35桁×35桁(1225文字)まで対応しています</p>
+        <p></p>
+        <div class="whitespace"></div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <?php footer_text() ?>
+    </footer>
+  </body>
+</html>
+<!--
+
+ダウンロードなり他サイトに複製なりお好きにしていいですけど、こんな汚いコードを転載したら恥かきますよ。
+
+-->

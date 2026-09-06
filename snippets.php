@@ -20,15 +20,16 @@ function ogp(string $title, string $description){
  * ヘッダーを出力する。
  * $toolName を渡すとパンくず（ツール置き場 / $toolName）付きのツールページ用ヘッダーになる。
  * $showChip を false にするとカラーパレットチップを省略する（404 ページ用）。
+ * $homeUrl はパンくずのトップへのリンク先。旧デザイン版（/legacy/*）は "/legacy/" を渡す。
  */
-function header_text(?string $toolName = null, bool $showChip = true){
+function header_text(?string $toolName = null, bool $showChip = true, string $homeUrl = "/"){
     ?>
 
     <div class="site-header__crumb">
         <?php if ($toolName === null): ?>
             <span class="site-header__home">ツール置き場</span>
         <?php else: ?>
-            <a href="/" target="_self" title="トップへ" class="site-header__home">ツール置き場</a>
+            <a href="<?= htmlspecialchars($homeUrl, ENT_QUOTES, "UTF-8") ?>" target="_self" title="トップへ" class="site-header__home">ツール置き場</a>
             <span class="site-header__sep">/</span>
             <span class="site-header__title"><?= htmlspecialchars($toolName, ENT_QUOTES, "UTF-8") ?></span>
         <?php endif; ?>

@@ -1,52 +1,9 @@
 /* ツール置き場 共通デザイン */
 
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap');
-@import url('https://cdn.jsdelivr.net/npm/hack-font@3.3.0/build/web/hack.css');
+/* ヘッダー / フッターは legacy と共有するため /src/chrome.css に分けてある。
+   フォント・カスタムプロパティもそちらが持つ。 */
+@import url("/src/chrome.css");
 
-/*
- * HackGen35 Console NF — SIL Open Font License 1.1
- * Copyright (c) 2019, Yuko OTAWARA. with Reserved Font Name "白源", "HackGen"
- * https://github.com/yuru7/HackGen  ／ 詳細は src/fonts/LICENSE_HackGen.md
- * ローカルに導入済みならそれを使い、無ければ同梱の WOFF2 を読み込む。
- */
-@font-face {
-  font-family: 'HackGen35 Console NF';
-  src:
-    local('HackGen35 Console NF'),
-    local('HackGen35ConsoleNF-Regular'),
-    url('/src/fonts/HackGen35ConsoleNF-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-:root {
-  /* 主色・副色・強調 — palette.js が上書きするまでの既定値（宵闇） */
-  --p1: #9184d9;
-  --p2: #6b8fd9;
-  --p3: #d9a05c;
-
-  /* 無彩色ランプの既定値（宵闇相当、JS 無効時のフォールバック） */
-  --bg: #18171f;
-  --s1: #1f1d29;
-  --s2: #131118;
-  --s3: #232130;
-  --s3h: #262433;
-  --s4: #0e0d13;
-  --rowalt: #1c1a26;
-  --line: #3b3849;
-
-  /* 文字色（パレットに依存しない） */
-  --text: #e9e9ed;
-  --text-2: #cfd3e5;
-  --text-dim: #9397ab;
-  --text-faint: #75798c;
-  --text-faint2: #595d6c;
-  --error: #ff8f6b;
-
-  --font-base: 'HackGen35 Console NF', 'HackGen Console NF', 'HackGen35', 'HackGen', 'Hack', 'Zen Maru Gothic', 'Noto Sans JP', system-ui, sans-serif;
-  --font-mono: 'HackGen35 Console NF', 'HackGen Console NF', 'HackGen', 'Hack', ui-monospace, Consolas, monospace;
-}
 
 * {
   box-sizing: border-box;
@@ -56,15 +13,9 @@
   scrollbar-color: var(--line) transparent;
 }
 
-html {
-  height: 100%;
-}
-
+/* 文字色・フォント・行送りは現行版だけのもの
+   （レイアウトと背景は /src/chrome.css 側で指定している）。 */
 body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: var(--bg);
   color: var(--text-2);
   font-family: var(--font-base);
   line-height: 1.6;
@@ -126,105 +77,9 @@ button:disabled {
   color: var(--text-faint2);
 }
 
-/* ============ ヘッダー / フッター ============ */
-
-header.site-header,
-footer.site-footer {
-  display: flex;
-  align-items: center;
-  padding: 0 22px;
-  flex-shrink: 0;
-}
-
-header.site-header {
-  height: 68px;
-  justify-content: space-between;
-}
-
-footer.site-footer {
-  height: 40px;
-  font-size: 12px;
-  color: var(--text-faint);
-}
-
-footer.site-footer a {
-  color: var(--text-dim);
-}
-
-.site-header__crumb {
-  display: flex;
-  align-items: baseline;
-  gap: 11px;
-  min-width: 0;
-}
-
-.site-header__home {
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--text);
-  text-decoration: none;
-}
-
-a.site-header__home {
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--text-faint);
-}
-
-.site-header__sep {
-  font-size: 18px;
-  color: var(--line);
-}
-
-.site-header__title {
-  font-size: 22px;
-  font-weight: 500;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* ============ カラーパレットチップ ============ */
-
-.palette-chip {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--s2);
-  padding: 6px 8px 6px 11px;
-  font-size: 12px;
-  color: var(--text-2);
-  transition: background .16s;
-}
-
-.palette-chip:hover {
-  background: var(--s3h);
-}
-
-.palette-chip__swatches {
-  display: flex;
-  gap: 3px;
-}
-
-.palette-chip__swatches .sw {
-  width: 10px;
-  height: 14px;
-}
-
-.palette-chip__swatches .sw--white { background: #eceef5; }
-.palette-chip__swatches .sw--p1 { background: var(--p1); }
-.palette-chip__swatches .sw--p2 { background: var(--p2); }
-.palette-chip__swatches .sw--p3 { background: var(--p3); }
-.palette-chip__swatches .sw--black { background: #16171d; }
 
 /* ============ トップページ ============ */
-
-main {
-  flex: 1 1 auto;
-  min-height: 0;
-}
+/* main を伸ばしてフッターを最下部に置く指定は /src/chrome.css 側にある。 */
 
 .whole-width-list {
   display: flex;
@@ -562,56 +417,12 @@ main {
   word-break: break-all;
 }
 
+
 /* ============ SP 版（幅 640px 以下） ============ */
 /* 左右余白は最小限に、ヘッダー・フッターは通常フロー、タッチ操作を想定して
    ドロップダウン・ボタンは大きめ、チェックボックスは判定領域を広めにとる。 */
 
 @media screen and (max-width: 640px) {
-  header.site-header,
-  footer.site-footer {
-    padding: 0 12px;
-  }
-
-  header.site-header {
-    height: 56px;
-  }
-
-  .site-header__home {
-    font-size: 19px;
-  }
-
-  a.site-header__home {
-    font-size: 13px;
-  }
-
-  .site-header__sep {
-    font-size: 13px;
-  }
-
-  .site-header__title {
-    font-size: 18px;
-  }
-
-  /* パレットチップはスウォッチのみのコンパクト表示にする */
-  .palette-chip {
-    padding: 8px;
-    gap: 0;
-  }
-
-  .palette-chip__name {
-    display: none;
-  }
-
-  .palette-chip__swatches .sw {
-    width: 9px;
-    height: 20px;
-  }
-
-  .palette-chip__swatches .sw--white,
-  .palette-chip__swatches .sw--black {
-    display: none;
-  }
-
   .page-pad {
     padding: 8px 12px 16px;
   }
