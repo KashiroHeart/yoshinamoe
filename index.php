@@ -81,6 +81,19 @@ require_once(__DIR__ . "/snippets.php");
                         </a>
                     </li>
                 </ul>
+                <div class="subhead" style="margin: 26px 0 11px;">LEGACY</div>
+                <ul class="whole-width-list">
+                    <li>
+                        <a href="/legacy/" target="_blank">
+                            <span class="tool-mark" style="background: var(--p3);"></span>
+                            <span style="flex: 1 1 auto; min-width: 0;">
+                                <span class="tool-name">旧デザイン版</span>
+                                <small>改修前のデザインのツール一式です。</small>
+                            </span>
+                            <span class="tool-slug">LEGACY</span>
+                        </a>
+                    </li>
+                </ul>
             </article>
         </section>
     </main>

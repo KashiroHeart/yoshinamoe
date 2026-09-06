@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../../snippets.php");
+require_once(__DIR__ . "/../../snippets.php");
 ?>
 <!doctype html>
 <html lang="ja">

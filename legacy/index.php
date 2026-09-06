@@ -32,21 +32,21 @@ require_once(__DIR__ . "/../snippets.php");
             <article>
                 <ul class="whole-width-list">
                     <li>
-                        <a href="/legacy/tools/base/" target="_blank">
+                        <a href="/legacy/base/" target="_blank">
                             基数変換機
                             <br />
                             <small>任意の基数間での変換、数列の置換等を実装した多機能基数変換機です。</small>
                         </a>
                     </li>
                     <li>
-                        <a href="/legacy/tools/codetable/" target="_blank">
+                        <a href="/legacy/codetable/" target="_blank">
                             文字対応表
                             <br />
                             <small>暗号等に使用可能な変換表です。</small>
                         </a>
                     </li>
                     <li>
-                        <a href="/legacy/tools/polybius/" target="_blank">
+                        <a href="/legacy/polybius/" target="_blank">
                             ポリュビオス暗号ツール
                             <br />
                             <small>ポリュビオス暗号の作成/解読を行うことができます。</small>

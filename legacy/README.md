@@ -14,10 +14,9 @@ legacy/
 ├── src/
 │   ├── lib.css          トップページのメイン領域スタイル（旧デザイン）
 │   └── lib.js           旧デザインの共通スクリプト（init()）
-└── tools/
-    ├── base/            基数変換機   （/legacy/tools/base/）
-    ├── codetable/       文字対応表   （/legacy/tools/codetable/）
-    └── polybius/        ポリュビオス暗号ツール（/legacy/tools/polybius/）
+├── base/                基数変換機   （/legacy/base/）
+├── codetable/           文字対応表   （/legacy/codetable/）
+└── polybius/            ポリュビオス暗号ツール（/legacy/polybius/）
 ```
 
 ## デザインの方針
@@ -53,10 +52,12 @@ legacy/
 
 メイン領域の見た目と入出力は旧版のまま維持しています。
 
+- `tools/` の階層を廃止し、`legacy/base/` のように 1 段浅くしました
+  （`legacy/` 自体が旧版のツール置き場のため）。
 - サイト内絶対パスを `/legacy/` 配下に変更
   （`/src/lib.css`, `/src/lib.js` → `/legacy/src/*`、トップへのリンクは `header_text()` に
   `"/legacy/"` を渡す）
-- 点字変換（`tools/tenji`）を削除
+- 点字変換（`tenji`）を削除
   旧版時点で未完成であり、以降は現行版 `/tools/tenji/` をメンテナンスするため。
   `legacy/index.php` のツール一覧からも削除しています。
 - **脱 jQuery**：`base.js` / `codetable.js` / `polybius.js` を素の DOM API で書き直し、
@@ -70,7 +71,7 @@ legacy/
   （`/snippets.php` + `/src/chrome.css`）に差し替えました。
   フッターの無かったポリュビオス暗号ツールにはフッターを追加しています。
   これに伴い、文字対応表・ポリュビオス暗号ツールは `index.html` → `index.php` に変更しました
-  （URL は `/legacy/tools/codetable/` などのままで変わりません）。
+  （`/legacy/codetable/` などの URL は変わりません）。
 - 全画面固定の背景（`.background` / `body::before`）は、ヘッダー / フッターの背後まで
   覆ってしまうため廃止し、同じ色をメイン領域（`main`）の背景として指定しています。
 - `codetable/index.html` から `/jquery_touch_punch.js` の読み込みを削除
