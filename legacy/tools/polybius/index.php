@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../snippets.php");
+require_once(__DIR__ . "/../../../snippets.php");
 ?>
 <!doctype html>
 <html lang="ja">
@@ -15,7 +15,7 @@ require_once(__DIR__ . "/../../snippets.php");
     <!-- タイトルタグ -->
     <title>ポリュビオス暗号生成機</title>
     <!-- 汎用 JS/CSS 読み込み -->
-    <link rel="stylesheet" href="/legacy/src/chrome.css" />
+    <link rel="stylesheet" href="/src/chrome.css" />
     <script src="/legacy/src/lib.js"></script>
     <script src="/src/palette.js"></script>
     <!-- その他 JS/CSS 読み込み -->
@@ -48,7 +48,7 @@ require_once(__DIR__ . "/../../snippets.php");
   </head>
   <body>
     <header class="site-header">
-      <?php header_text("ポリュビオス暗号ツール") ?>
+      <?php header_text("ポリュビオス暗号ツール", true, "/legacy/") ?>
     </header>
     <main>
       <div class="container">

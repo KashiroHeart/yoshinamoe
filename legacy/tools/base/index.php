@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/../../snippets.php");
+require_once(__DIR__ . "/../../../snippets.php");
 ?>
 <!doctype html>
 <html lang="ja">
@@ -16,7 +16,7 @@ require_once(__DIR__ . "/../../snippets.php");
     <!-- タイトルタグ -->
     <title>基数変換機</title>
     <!-- 汎用 JS/CSS 読み込み -->
-    <link rel="stylesheet" href="/legacy/src/chrome.css" />
+    <link rel="stylesheet" href="/src/chrome.css" />
     <script src="/legacy/src/lib.js"></script>
     <script src="/src/palette.js"></script>
     <!-- その他 JS/CSS 読み込み -->
@@ -29,7 +29,7 @@ require_once(__DIR__ . "/../../snippets.php");
 
 <body>
     <header class="site-header">
-        <?php header_text("基数変換機") ?>
+        <?php header_text("基数変換機", true, "/legacy/") ?>
     </header>
     <main>
         <div class="container">

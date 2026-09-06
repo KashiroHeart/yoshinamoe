@@ -1,3 +1,6 @@
+<?php
+require_once(__DIR__ . "/../../snippets.php");
+?>
 <!DOCTYPE HTML>
 <html lang="ja">
   <head>
@@ -19,17 +22,7 @@
   </head>
   <body>
     <header class="site-header">
-      <div class="site-header__crumb">
-        <a href="/" class="site-header__home">ツール置き場</a>
-        <span class="site-header__sep">/</span>
-        <span class="site-header__title">点字変換</span>
-      </div>
-      <button type="button" class="palette-chip" aria-label="カラーパレットを切り替え">
-        <span class="palette-chip__name"></span>
-        <span class="palette-chip__swatches">
-          <span class="sw sw--white"></span><span class="sw sw--p1"></span><span class="sw sw--p2"></span><span class="sw sw--p3"></span><span class="sw sw--black"></span>
-        </span>
-      </button>
+      <?php header_text("点字変換") ?>
     </header>
 
     <noscript>
@@ -71,7 +64,7 @@
     </main>
 
     <footer class="site-footer">
-      <p>2025 Yoka / <a href="https://x.com/xx7_44" target="_blank">@xx7_44</a></p>
+      <?php footer_text() ?>
     </footer>
   </body>
 </html>

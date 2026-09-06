@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . "/snippets.php");
+require_once(__DIR__ . "/../snippets.php");
 ?>
 <!DOCTYPE HTML>
 <html lang="ja">
@@ -16,7 +16,7 @@ require_once(__DIR__ . "/snippets.php");
     <!-- タイトルタグ -->
     <title>トップページ（旧版）</title>
     <!-- 汎用 JS/CSS 読み込み -->
-    <link rel="stylesheet" href="/legacy/src/chrome.css" />
+    <link rel="stylesheet" href="/src/chrome.css" />
     <link rel="stylesheet" href="/legacy/src/lib.css" />
     <script src="/legacy/src/lib.js"></script>
     <script src="/src/palette.js"></script>
@@ -25,7 +25,7 @@ require_once(__DIR__ . "/snippets.php");
 
 <body>
     <header class="site-header">
-        <?php header_text() ?>
+        <?php header_text(null, true, "/legacy/") ?>
     </header>
     <main>
         <section>

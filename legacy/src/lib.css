@@ -2,7 +2,7 @@
 
 /*
  * 旧デザイン版（legacy）トップページのメイン領域スタイル。
- * ヘッダー / フッターは legacy/src/chrome.css（現行版と同じデザイン）が担当する。
+ * ヘッダー / フッターは現行版と共通の /src/chrome.css が担当する。
  */
 
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
