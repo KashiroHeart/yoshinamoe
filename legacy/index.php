@@ -14,7 +14,7 @@ require_once(__DIR__ . "/../snippets.php");
         "自作ツール置き場（旧デザイン版）です。"
     ); ?>
     <!-- タイトルタグ -->
-    <title>トップページ（旧版）</title>
+    <title>ツール置き場（旧版）</title>
     <!-- 汎用 JS/CSS 読み込み -->
     <link rel="stylesheet" href="/src/chrome.css" />
     <link rel="stylesheet" href="/legacy/src/lib.css" />

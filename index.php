@@ -13,7 +13,7 @@ require_once(__DIR__ . "/snippets.php");
         "自作ツール置き場です。"
     ); ?>
     <!-- タイトルタグ -->
-    <title>トップページ</title>
+    <title>ツール置き場</title>
     <!-- 汎用 JS/CSS 読み込み -->
     <link rel="stylesheet" href="/src/lib.css" />
     <script src="/src/lib.js"></script>

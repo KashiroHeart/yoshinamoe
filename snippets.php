@@ -55,7 +55,7 @@ function palette_chip() {
 function footer_text() {
     ?>
 
-        <p>2025 Yoka / <a href="https://x.com/xx7_44" target="_blank">@xx7_44</a></p>
+        <p><a href="https://yoshina.moe/" target="_blank">yoshinamoe</a> | 2025-2026 <a href="https://x.com/xx7_44" target="_blank">@xx7_44</a></p>
 
     <?php
 }
