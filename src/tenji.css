@@ -1,5 +1,5 @@
-/* for tools/tenji/index.html */
-/* 共通スタイルは /src/lib.css を参照。ここでは点字変換に固有の見た目のみ。 */
+/* for tools/tenji/ and tools/tenjicrypt/ */
+/* 全体で共通のスタイルは /src/lib.css を参照。ここでは点字系ツールに固有の見た目のみ。 */
 
 .tenji-main {
   flex: 1 1 auto;
@@ -97,9 +97,7 @@
     padding-right: 22px;
   }
 
-  #input,
-  #output,
-  #tj_rows {
+  .tenji-main .tool-io {
     min-height: 8em;
   }
 }
@@ -118,7 +116,7 @@
     overflow: hidden;
   }
 
-  #output {
+  .tenji-main .tool-io--out {
     font-size: 24px;
   }
 

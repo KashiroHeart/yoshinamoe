@@ -65,7 +65,7 @@ require_once(__DIR__ . "/snippets.php");
                             <span class="tool-mark" style="background: var(--p1);"></span>
                             <span style="flex: 1 1 auto; min-width: 0;">
                                 <span class="tool-name">点字変換</span>
-                                <small>かな・漢字と 6 点／8 点点字を相互に変換します。</small>
+                                <small>かなと 6 点点字、漢字と漢点字を相互に変換します。</small>
                             </span>
                             <span class="tool-slug">TENJI</span>
                         </a>
@@ -78,6 +78,16 @@ require_once(__DIR__ . "/snippets.php");
                                 <small>複数の変換をドラッグ &amp; ドロップで並べ、段階的に変換します。</small>
                             </span>
                             <span class="tool-slug">MULTICRYPT</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/tools/tenjicrypt/" target="_blank">
+                            <span class="tool-mark" style="background: var(--p3);"></span>
+                            <span style="flex: 1 1 auto; min-width: 0;">
+                                <span class="tool-name">暗号点字変換</span>
+                                <small>点字・漢点字の暗号解読向け変換ツールです。始終点符号の総当たり補完に対応します。</small>
+                            </span>
+                            <span class="tool-slug">TENJICRYPT</span>
                         </a>
                     </li>
                 </ul>
