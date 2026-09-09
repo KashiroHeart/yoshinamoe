@@ -152,6 +152,9 @@ const k2kt = function (input) {
   return result.join("");
 };
 
+/* 始終点符号なしは 8 点点字から 0 点・7 点を切り捨てて詰めた形なので、出力は 6 点点字になる。
+   braille2Kanji の 3 列目はその値で、全 6349 行とも 0 点・7 点が立たない
+   （= braille8Table で引いても 6 点点字の字形になる）ことを確認済み。 */
 const k2kt2 = function (input) {
   const result = [];
   for (let i = 0; i < input.length;) {
@@ -167,8 +170,8 @@ const k2kt2 = function (input) {
       continue;
     }
 
-    /* 仮名のセルには始点・終点が無いので k2kt と同じ表現になる。 */
-    const consumed = encodeKana(input, i, KANA8, braille8Table, result);
+    /* 仮名も 6 点点字で返す。 */
+    const consumed = encodeKana(input, i, KANA6, braille6Table, result);
     if (consumed) {
       i += consumed;
       continue;
