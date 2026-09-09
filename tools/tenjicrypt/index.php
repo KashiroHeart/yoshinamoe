@@ -8,12 +8,12 @@ require_once(__DIR__ . "/../../snippets.php");
     <meta name="author" content="Yoka">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow">
-    <meta property="og:title" content="点字変換">
-    <meta property="og:description" content="かなと 6 点点字、漢字と漢点字を相互に変換します。">
-    <meta property="og:url" content="https://4472.web.fc2.com/tools/tenji/">
+    <meta property="og:title" content="暗号点字変換">
+    <meta property="og:description" content="点字・漢点字の暗号解読向け変換ツールです。始終点符号の総当たり補完に対応します。">
+    <meta property="og:url" content="https://4472.web.fc2.com/tools/tenjicrypt/">
     <meta property="og:type" content="article">
     <meta property="og:site_name" content="ツール置き場">
-    <title>点字変換</title>
+    <title>暗号点字変換</title>
     <link rel="stylesheet" href="/src/lib.css" />
     <script src="/src/lib.js"></script>
     <script src="/src/palette.js"></script>
@@ -22,7 +22,7 @@ require_once(__DIR__ . "/../../snippets.php");
   </head>
   <body>
     <header class="site-header">
-      <?php header_text("点字変換") ?>
+      <?php header_text("暗号点字変換") ?>
     </header>
 
     <noscript>
@@ -42,6 +42,9 @@ require_once(__DIR__ . "/../../snippets.php");
           <span class="count" id="tj_out_label"></span>
         </div>
         <div id="output" class="tool-io tool-io--out" style="font-size: 22px; line-height: 1.9;"></div>
+        <div id="tj_rows" class="tool-io tool-io--out tenji-rows" hidden></div>
+
+        <p class="tool-note tenji-warn"><span class="warn" id="tj_warn"></span></p>
       </div>
 
       <div class="tool-col tenji-col-right tool-drawer">
@@ -52,6 +55,10 @@ require_once(__DIR__ . "/../../snippets.php");
 
         <div class="subhead" style="margin-top: 12px;">8 点点字モード</div>
         <div class="tenji-modes" data-group="8"></div>
+
+        <p style="margin-top: 18px;">
+          <button type="button" id="tenji_run" class="btn-accent1" style="padding: 8px 22px;">実行</button>
+        </p>
         </div>
       </div>
     </main>
