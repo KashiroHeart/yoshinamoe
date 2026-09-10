@@ -6,6 +6,7 @@ import {
   braille2Kanji,
   braille2Kana,
   braille2KanaTable,
+  brailleIndicators,
 }
 from "/src/tenji-rules.js";
 import {
@@ -50,10 +51,39 @@ const buildKanaMaps = function (valueColumn) {
   return { encode, decode };
 };
 
+/**
+ * 英字・数字と 6 点点字の対応表を組み立てる。braille2KanaTable の列 5（英字）・列 6（数字）は
+ * 同じ行の仮名とマスを共有しているので、braille2Kana の 6 点値をそのまま使える。
+ * 数符・外字符は 6 点点字だけの規則なので、8 点点字版は作らない。
+ */
+const buildAsciiMaps = function () {
+  const maps = {
+    letterToCell: new Map(),
+    cellToLetter: new Map(),
+    digitToCell: new Map(),
+    cellToDigit: new Map(),
+  };
+  for (let i = 0; i < braille2Kana.length; i++) {
+    const row = braille2KanaTable[i];
+    if (!row) continue;
+    const cell = braille2Kana[i][1];
+    if (row[5]) {
+      maps.letterToCell.set(row[5], cell);
+      maps.cellToLetter.set(cell, row[5]);
+    }
+    if (row[6]) {
+      maps.digitToCell.set(row[6], cell);
+      maps.cellToDigit.set(cell, row[6]);
+    }
+  }
+  return maps;
+};
+
 /* 仮名は 1〜6 の点しか使わないため、8 点点字でも 0 点・7 点は立たない
    （= 漢点字の始点・終点ビットと衝突しない）。 */
 const KANA6 = buildKanaMaps(1);
 const KANA8 = buildKanaMaps(3);
+const ASCII = buildAsciiMaps();
 
 const err = function (e) {
   console.error(e);
@@ -61,19 +91,30 @@ const err = function (e) {
 };
 
 /**
+ * input[i] から始まるかなを引く。k2t はマスを出力する前にその値を知る必要がある
+ * （つなぎ符の判定）ので、照合だけを encodeKana から分けてある。
+ * @returns {{ entry: [number | null, number], consumed: number } | null}
+ */
+const lookupKana = function (input, i, maps) {
+  /* 拗音は 2 文字（きゃ）なので長い方から照合する。 */
+  const digraph = maps.encode.get(input.slice(i, i + 2));
+  const entry = digraph ?? maps.encode.get(input[i]);
+  if (!entry) return null;
+  return { entry, consumed: digraph ? 2 : 1 };
+};
+
+/**
  * input[i] から始まるかなを点字にして out へ push する。
  * @returns {number} 消費した文字数。0 なら該当するかなが無い
  */
 const encodeKana = function (input, i, maps, table, out) {
-  /* 拗音は 2 文字（きゃ）なので長い方から照合する。 */
-  const digraph = maps.encode.get(input.slice(i, i + 2));
-  const entry = digraph ?? maps.encode.get(input[i]);
-  if (!entry) return 0;
+  const found = lookupKana(input, i, maps);
+  if (!found) return 0;
 
-  const [mark, base] = entry;
+  const [mark, base] = found.entry;
   if (mark !== null) out.push(table[mark]);
   out.push(table[base]);
-  return digraph ? 2 : 1;
+  return found.consumed;
 };
 
 /**
@@ -90,24 +131,142 @@ const decodeKana = function (cells, i, maps) {
   return kana ? [kana, 1] : null;
 };
 
+const isDigit = c => c >= "0" && c <= "9";
+const isLetter = c => (c >= "a" && c <= "z") || (c >= "A" && c <= "Z");
+
+/* 大字文字列（⠠⠠）でまとめるのに必要な、連続する大文字の最小数。 */
+const CAPITAL_RUN_MIN = 3;
+
+/**
+ * input[i] から続く英字の塊を、外字符を前置して out へ push する。
+ * @returns {number} 消費した文字数
+ */
+const encodeForeign = function (input, i, out) {
+  let end = i;
+  while (end < input.length && isLetter(input[end])) end++;
+  const block = input.slice(i, end);
+
+  out.push(braille6Table[brailleIndicators.foreign]);
+
+  /* すべて大文字の 3 文字以上の塊だけ、大字文字列を 1 つ置いてまとめて大文字にする。
+     それ以外は大文字 1 つずつに大字を前置する。 */
+  const capitalRun = block.length >= CAPITAL_RUN_MIN && block === block.toUpperCase();
+  if (capitalRun) {
+    out.push(braille6Table[brailleIndicators.capital], braille6Table[brailleIndicators.capital]);
+  }
+  for (const ch of block) {
+    if (!capitalRun && ch !== ch.toLowerCase()) out.push(braille6Table[brailleIndicators.capital]);
+    out.push(braille6Table[ASCII.letterToCell.get(ch.toLowerCase())]);
+  }
+
+  /* 外字符の効力は続くかな・記号にも及ぶので、そこだけつなぎ符で切る。
+     数字が続く場合は数符が来るし、入力の末尾なら切る相手がいないので付けない。 */
+  const next = input[end];
+  if (next !== undefined && !isDigit(next)) out.push(braille6Table[brailleIndicators.link]);
+  return end - i;
+};
+
 const k2t = function (input) {
   const result = [];
+  /* 数字のマスはあ行・ら行のかなのマスそのものなので、数字の直後にそれらが来るときだけ
+     つなぎ符で切る。「次に出す先頭のマスが数字のマスと衝突するか」で判定しているので、
+     対応データが変わっても規則の方は直さなくてよい。 */
+  let afterDigits = false;
   for (let i = 0; i < input.length;) {
-    const consumed = encodeKana(input, i, KANA6, braille6Table, result);
-    if (consumed) {
-      i += consumed;
+    if (isDigit(input[i])) {
+      result.push(braille6Table[brailleIndicators.number]);
+      while (i < input.length && isDigit(input[i])) {
+        result.push(braille6Table[ASCII.digitToCell.get(input[i])]);
+        i++;
+      }
+      afterDigits = true;
       continue;
     }
+
+    if (isLetter(input[i])) {
+      i += encodeForeign(input, i, result);
+      afterDigits = false;
+      continue;
+    }
+
+    const found = lookupKana(input, i, KANA6);
+    if (found) {
+      const [mark, base] = found.entry;
+      if (afterDigits && mark === null && ASCII.cellToDigit.has(base)) {
+        result.push(braille6Table[brailleIndicators.link]);
+      }
+      if (mark !== null) result.push(braille6Table[mark]);
+      result.push(braille6Table[base]);
+      i += found.consumed;
+      afterDigits = false;
+      continue;
+    }
+
     err("変換できない文字が含まれています。：" + input[i]);
     i++;
   }
   return result.join("");
 };
 
+/**
+ * cells[i] の数符から数字の並びを復号する。数字にないマスかつなぎ符で終わる。
+ * @returns {[string, number] | null} [数字列, 消費したセル数]
+ */
+const decodeNumber = function (cells, i) {
+  let j = i + 1;
+  const digits = [];
+  while (j < cells.length && ASCII.cellToDigit.has(cells[j])) {
+    digits.push(ASCII.cellToDigit.get(cells[j]));
+    j++;
+  }
+  if (!digits.length) return null;
+  /* つなぎ符は区切りを示すだけなので読み捨てる。 */
+  if (cells[j] === brailleIndicators.link) j++;
+  return [digits.join(""), j - i];
+};
+
+/**
+ * cells[i] の外字符から英字の並びを復号する。英字にないマスかつなぎ符で終わる。
+ * @returns {[string, number] | null} [英字列, 消費したセル数]
+ */
+const decodeForeign = function (cells, i) {
+  let j = i + 1;
+
+  /* 大字文字列は塊の終わりまで、大字は直後の 1 文字だけを大文字にする。 */
+  const capitalRun = cells[j] === brailleIndicators.capital && cells[j + 1] === brailleIndicators.capital;
+  if (capitalRun) j += 2;
+
+  const letters = [];
+  while (j < cells.length) {
+    let k = j;
+    const capital = capitalRun || cells[k] === brailleIndicators.capital;
+    if (!capitalRun && capital) k++;
+
+    const letter = ASCII.cellToLetter.get(cells[k]);
+    if (!letter) break;
+    letters.push(capital ? letter.toUpperCase() : letter);
+    j = k + 1;
+  }
+  if (!letters.length) return null;
+  if (cells[j] === brailleIndicators.link) j++;
+  return [letters.join(""), j - i];
+};
+
 const t2k = function (input) {
   const cells = input.split("").map(m => braille6Table.indexOf(m)).map(m => m > 0 ? m : 0);
   const kanaInput = [];
   for (let i = 0; i < cells.length;) {
+    /* 数符・外字符は decodeKana の対応表に無いので先に見る。とくに外字符は「、」と
+       同じマスなので、英字として読める並びが続くときだけ外字符として扱う。 */
+    const block = cells[i] === brailleIndicators.number ? decodeNumber(cells, i)
+      : cells[i] === brailleIndicators.foreign ? decodeForeign(cells, i)
+      : null;
+    if (block) {
+      kanaInput.push(block[0]);
+      i += block[1];
+      continue;
+    }
+
     const decoded = decodeKana(cells, i, KANA6);
     if (decoded) {
       kanaInput.push(decoded[0]);
